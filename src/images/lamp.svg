@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="50px" height="50px" viewBox="0 0 50 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+    <title>Artboard</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M24.663,3.6071 L21.806,1.9131 L18.95,0.2181 C18.95,0.2181 -3.757,5.6651 1.717,34.1601 C1.844,34.8241 2.498,35.2121 3.141,35.0061 C30.771,26.1451 24.663,3.6071 24.663,3.6071" id="path-1"></path>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-3">
+            <stop stop-color="#F5515F" offset="0%"></stop>
+            <stop stop-color="#9F041B" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Artboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Lamp" transform="translate(25.874450, 24.269354) rotate(-31.000000) translate(-25.874450, -24.269354) translate(10.374450, 1.769354)">
+            <g id="Color/White" transform="translate(0.000000, 9.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <use id="Mask" fill="#EAEAEA" xlink:href="#path-1"></use>
+                <g id="Color/Red" mask="url(#mask-2)" fill="url(#linearGradient-3)" fill-rule="nonzero">
+                    <g transform="translate(-6.000000, -4.000000)" id="Grey-Lamp">
+                        <rect x="0" y="0" width="42" height="42"></rect>
+                    </g>
+                </g>
+            </g>
+            <path d="M24.663,12.6071 L22.735,11.4631 C22.757,18.6281 19.898,31.3001 0.976,37.5101 C1.1,39.2881 1.333,41.1621 1.717,43.1601 C1.844,43.8241 2.498,44.2121 3.141,44.0051 C30.771,35.1451 24.663,12.6071 24.663,12.6071" id="Fill-33" fill-opacity="0.05" fill="#000000"></path>
+            <path d="M17.582,11.7046 C13.253,13.8576 6.681,18.6096 4.367,28.2076 L17.582,11.7046 Z" id="Fill-34" fill-opacity="0.4" fill="#FFFFFF"></path>
+            <path d="M21.4815082,3.3650558 L23.1386782,0.570678164 C23.4656782,0.0186781643 24.1856782,-0.165321836 24.7376782,0.162678164 L30.1896782,3.39567816 C30.7416782,3.72367816 30.9246782,4.44267816 30.5976782,4.99467816 L28.8866113,7.8799387 L28.9559737,7.92222888 C29.7342053,8.39768356 29.9922059,9.43991501 29.5311883,10.2400704 L26.7453449,15.0699942 C26.2829175,15.8701496 25.2692427,16.1368681 24.4910112,15.662863 L16.8045648,10.9749958 C16.0263332,10.5009907 15.7669227,9.45730969 16.2293501,8.65715426 L19.0151935,3.8272305 C19.4762111,3.02707506 20.4912958,2.76035658 21.2695273,3.23581126 L21.4815082,3.3650558 Z" id="Combined-Shape" fill="#000000"></path>
+        </g>
+    </g>
+</svg>
