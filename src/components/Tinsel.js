@@ -38,9 +38,20 @@ const Tinsel = ({ startY, stopY, lowHangingFruit, width, height, days }) => {
       };
 
       setCoordinates(
-        days.map((day, index) =>
-          getPointCoordinates((90 / days.length) * index + 10),
-        ),
+        days.map((day, index) => {
+          const pointPercentage = (90 / days.length) * index + 10;
+          const pointCoordinates = getPointCoordinates(pointPercentage);
+          const point1 = getPointCoordinates(pointPercentage - 2);
+          const point2 = getPointCoordinates(pointPercentage + 2);
+
+          return {
+            ...pointCoordinates,
+            angle: Math.floor(
+              (Math.atan2(point2.y - point1.y, point2.x - point1.x) * 180) /
+                Math.PI,
+            ),
+          };
+        }),
       );
     },
     [x1, x2, y1, y2, x, y],
@@ -70,7 +81,9 @@ const Tinsel = ({ startY, stopY, lowHangingFruit, width, height, days }) => {
                 position: 'absolute',
                 left: coordinates[index].x,
                 top: coordinates[index].y,
-                transform: `translate3d(-50%, -50%, 0)`,
+                transform: `translate3d(-50%, -50%, 0) rotate(${
+                  coordinates[index].angle
+                }deg)`,
               }}
             />
           ) : null,
