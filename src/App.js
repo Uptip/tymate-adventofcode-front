@@ -1,21 +1,64 @@
 import React from 'react';
-import { Query, Mutation } from 'react-apollo';
-import { CREATE_ADMIN, GET_USER_CALENDAR } from 'queries';
+import { createGlobalStyle } from 'styled-components';
+import noise from 'images/noise.png';
+import { Switch, Route } from 'react-router-dom';
+import Admin from 'containers/Admin';
+import Calendar from 'containers/Calendar';
 
-class App extends React.Component {
-  state = {
-    email: '',
-  };
+const GlobalStyle = createGlobalStyle`
+  body {
+    min-height: 100vh;
+    background: background-image: url("${noise}");
+    background-image: url("${noise}"), linear-gradient(hsl(233, 94%, 13%) 30%, hsla(234, 81%, 25%, 0.67) 95%);
+    position: relative;
+    overflow-x: hidden;
+  }
+`;
 
-  render() {
-    const { email } = this.state;
+const App = () => (
+  <>
+    <GlobalStyle />
 
-    return (
-      <>
-        <Mutation
+    <Switch>
+      <Route path="/admin/jours" component={Admin} />
+      <Route path="/admin/:token?" component={Admin} />
+      <Route path="/:slug?" component={Calendar} />
+    </Switch>
+
+    {/* <Mutation
           mutation={CREATE_ADMIN}
-          variables={{ email }}
-          onCompleted={data => console.log(data)}
+          variables={{ input: { email, newsletter: false } }}
+          onCompleted={({ createAdmin }) => console.log(createAdmin)}
+          onError={e => console.error(e)}
+        >
+          {(createAdmin, { data }) => (
+            <>
+              <input value={email} onChange={e => setEmail(e.target.value)} />
+              <button type="submit" onClick={createAdmin}>
+                Register
+              </button>
+            </>
+          )}
+        </Mutation> */}
+
+    {/* <Tinsels>
+        {[...Array(tinselsLength).keys()].map(index => (
+          <Tinsel
+            key={index}
+            startY={50}
+            stopY={20}
+            lowHangingFruit={{ x: 30, y: 90 }}
+            width={width}
+            height={Math.max(height / (tinselsLength + 1), 200)}
+          />
+        ))}
+      </Tinsels> */}
+
+    {/*<Mutation
+          mutation={CREATE_ADMIN}
+          variables={{ input: { email, newsletter: false } }}
+          onCompleted={({ createAdmin }) => console.log(createAdmin)}
+          onError={e => console.error(e)}
         >
           {(createAdmin, { data }) => (
             <>
@@ -42,10 +85,8 @@ class App extends React.Component {
 
             return <pre>{JSON.stringify(data, null, 2)}</pre>;
           }}
-        </Query>
-      </>
-    );
-  }
-}
+        </Query>*/}
+  </>
+);
 
 export default App;
