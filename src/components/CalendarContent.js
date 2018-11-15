@@ -4,38 +4,36 @@ import Tinsel from 'components/Tinsel';
 import { useWindowSize } from 'the-platform';
 import find from 'lodash/find';
 
-const Tinsels = styled.div`
-  ${'' /* padding-top: 200px; */};
-`;
+const Tinsels = styled.div``;
 
-const daysNumbers = [
-  3,
-  13,
-  24,
-  12,
-  20,
-  9,
-  4,
-  6,
-  21,
-  16,
-  14,
-  18,
-  11,
-  5,
-  10,
-  19,
-  2,
-  22,
-  15,
-  17,
-  7,
-  1,
-  23,
-  8,
+const daysProps = [
+  { number: 3, color: 'yellow' },
+  { number: 13, color: 'yellow' },
+  { number: 24, color: 'blue' },
+  { number: 12, color: 'green' },
+  { number: 20, color: 'red' },
+  { number: 9, color: 'yellow' },
+  { number: 4, color: 'pink' },
+  { number: 6, color: 'red' },
+  { number: 21, color: 'green' },
+  { number: 16, color: 'blue' },
+  { number: 14, color: 'red' },
+  { number: 18, color: 'green' },
+  { number: 11, color: 'pink' },
+  { number: 5, color: 'yellow' },
+  { number: 10, color: 'blue' },
+  { number: 19, color: 'red' },
+  { number: 2, color: 'yellow' },
+  { number: 22, color: 'blue' },
+  { number: 15, color: 'yellow' },
+  { number: 17, color: 'green' },
+  { number: 7, color: 'red' },
+  { number: 1, color: 'yellow' },
+  { number: 23, color: 'pink' },
+  { number: 8, color: 'red' },
 ];
 
-const CalendarContent = ({ days }) => {
+const CalendarContent = ({ days, calendarRoute }) => {
   const { width, height } = useWindowSize();
   const [tinselsLength, setTinselsLength] = useState(1);
   const daysPerTinsel = 24 / tinselsLength;
@@ -57,8 +55,9 @@ const CalendarContent = ({ days }) => {
     [width],
   );
 
-  const calendarDays = daysNumbers.map(number => ({
+  const calendarDays = daysProps.map(({ number, color }) => ({
     number,
+    color,
     ...find(days, day => number === day.number),
   }));
 
@@ -70,6 +69,11 @@ const CalendarContent = ({ days }) => {
     { startY: 40, stopY: 20, lowHangingFruitX: 50, lowHangingFruitY: 80 },
     { startY: 10, stopY: 30, lowHangingFruitX: 60, lowHangingFruitY: 60 },
   ];
+
+  console.log(tinselsLength, tinselsLength === 1);
+  if (tinselsLength === 1) {
+    return null;
+  }
 
   return (
     <>
@@ -89,6 +93,7 @@ const CalendarContent = ({ days }) => {
               index * daysPerTinsel,
               daysPerTinsel * index + daysPerTinsel,
             )}
+            calendarRoute={calendarRoute}
           />
         ))}
       </Tinsels>

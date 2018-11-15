@@ -22,6 +22,8 @@ const App = () => (
     <Switch>
       <Route path="/admin/jours" component={Admin} />
       <Route path="/admin/:token?" component={Admin} />
+      <Route path="/jours/:dayId" component={Calendar} />
+      <Route path="/:slug/jours/:dayId" component={Calendar} />
       <Route path="/:slug?" component={Calendar} />
     </Switch>
 

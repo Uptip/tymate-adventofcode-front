@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Mutation } from 'react-apollo';
 import { UPDATE_DAY } from 'queries';
+import { Button } from 'ui';
 
 const useDayForm = defaultType => {
   const [kind, setKind] = useState(defaultType);
@@ -61,98 +62,69 @@ const DayForm = ({ day }) => {
     handleURLChange,
     handleKindChange,
     // handleFileChange,
-    // file,
+    file,
     // setFile,
     image,
   } = useDayForm('LINK');
 
   return (
-    <div style={{ background: '#fff' }}>
-      <div>
-        <label>
-          <input
-            type="radio"
-            name="kind"
-            value="LINK"
-            checked={kind === 'LINK'}
-            onChange={handleKindChange}
-          />
-          Lien
-        </label>
-      </div>
+    <Mutation
+      mutation={UPDATE_DAY}
+      variables={{
+        updateDay: {
+          userToken: 'W0Z4cbOgSFdhoime2sc-rmHNXBADiwqGNg',
+          id: '25',
+          displayName: 'Foobar',
+          contentType: 'link',
+          link: 'https://google.fr',
+        },
+      }}
+      onCompleted={({ createAdmin }) => console.log(createAdmin)}
+      onError={e => console.error(e)}
+    >
+      {(mutate, { data }) => (
+        <form
+          onSubmit={e => {
+            e.preventDefault();
+            mutate();
+          }}
+        >
+          <div>
+            <label>
+              <input
+                type="radio"
+                name="kind"
+                value="LINK"
+                checked={kind === 'LINK'}
+                onChange={handleKindChange}
+              />
+              Lien
+            </label>
+          </div>
+          <input value={URL} onChange={handleURLChange} />
 
-      <input value={URL} onChange={handleURLChange} />
+          <div>
+            <label>
+              <input
+                type="radio"
+                name="kind"
+                value="IMAGE"
+                checked={kind === 'IMAGE'}
+                onChange={handleKindChange}
+              />
+              Image
+            </label>
+          </div>
+          <img src={image} alt="" />
 
-      <div>
-        <label>
-          <input
-            type="radio"
-            name="kind"
-            value="IMAGE"
-            checked={kind === 'IMAGE'}
-            onChange={handleKindChange}
-          />
-          Image
-        </label>
-      </div>
+          <input type="file" />
 
-      <img src={image} alt="" />
-
-      <Mutation
-        mutation={UPDATE_DAY}
-        // variables={{
-        //   updateDay: {
-        //     userToken: 'W0Z4cbOgSFdhoime2sc-rmHNXBADiwqGNg',
-        //     id: '25',
-        //     displayName: 'Foobar',
-        //     contentType: 'link',
-        //     link: 'https://google.fr',
-        //     image: file,
-        //   },
-        // }}
-        onCompleted={({ createAdmin }) => console.log(createAdmin)}
-        onError={e => console.error(e)}
-      >
-        {(mutate, { data }) => (
-          <>
-            <input
-              type="file"
-              required
-              onChange={({
-                target: {
-                  validity,
-                  files: [file],
-                },
-              }) =>
-                validity.valid &&
-                mutate({
-                  variables: {
-                    updateDay: {
-                      userToken: 'W0Z4cbOgSFdhoime2sc-rmHNXBADiwqGNg',
-                      id: '25',
-                      displayName: 'Foobar',
-                      contentType: 'link',
-                      link: 'https://google.fr',
-                      image: file,
-                    },
-                  },
-                })
-              }
-              // onChange={({
-              //   target: {
-              //     validity,
-              //     files: [file],
-              //   },
-              // }) => handleFileChange(file)}
-            />
-
-            <button type="submit" onClick={mutate}>
-              Add Todo
-            </button>
-          </>
-        )}
-      </Mutation>
-    </div>
+          <Button variant="primary" type="submit" onClick={mutate}>
+            Enregistrer
+          </Button>
+        </form>
+      )}
+    </Mutation>
   );
 };
 

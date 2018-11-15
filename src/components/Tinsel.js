@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import Lamp from './Lamp';
 
-const Tinsel = ({ startY, stopY, lowHangingFruit, width, height, days }) => {
+const Tinsel = ({
+  startY,
+  stopY,
+  lowHangingFruit,
+  width,
+  height,
+  days,
+  calendarRoute,
+}) => {
   const [x1] = useState(0);
   const [x2, setX2] = useState(0);
   const [y1, setY1] = useState(50);
@@ -76,7 +84,17 @@ const Tinsel = ({ startY, stopY, lowHangingFruit, width, height, days }) => {
         (lamp, index) =>
           Boolean(coordinates[index]) ? (
             <Lamp
+              calendarRoute={calendarRoute}
+              dayId={lamp.id}
+              linkTo={
+                Boolean(lamp.id)
+                  ? `${calendarRoute}/jours/${lamp.id}`
+                  : undefined
+              }
+              color={lamp.color}
+              number={lamp.number}
               key={index}
+              textAngle={coordinates[index].angle}
               style={{
                 position: 'absolute',
                 left: coordinates[index].x,

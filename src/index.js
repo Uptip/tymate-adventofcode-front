@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 // import ApolloClient, { InMemoryCache } from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
@@ -10,6 +10,8 @@ import createBrowserHistory from 'history/createBrowserHistory';
 import { createUploadLink } from 'apollo-upload-client';
 import { ApolloClient } from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
+import { ThemeProvider } from 'styled-components';
+import { theme } from 'ui';
 export const history = createBrowserHistory();
 
 const client = new ApolloClient({
@@ -42,11 +44,15 @@ const client = new ApolloClient({
 // });
 
 ReactDOM.render(
-  <Router history={history}>
-    <ApolloProvider client={client}>
-      <App />
-    </ApolloProvider>
-  </Router>,
+  <Suspense fallback={<div>…</div>}>
+    <ThemeProvider theme={theme}>
+      <Router history={history}>
+        <ApolloProvider client={client}>
+          <App />
+        </ApolloProvider>
+      </Router>
+    </ThemeProvider>
+  </Suspense>,
   document.getElementById('root'),
 );
 

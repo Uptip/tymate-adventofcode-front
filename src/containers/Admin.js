@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Query } from 'react-apollo';
 import { Route } from 'react-router-dom';
 import { GET_USER_CALENDAR } from 'queries';
@@ -7,13 +7,13 @@ import { history } from '../';
 import { Link } from 'react-router-dom';
 import DayForm from './DayForm';
 import find from 'lodash/find';
+import { Modal, ModalCloseButton, ModalOverlay, media, Button } from 'ui';
+import { MdClose } from 'react-icons/md';
 
 const Content = styled.div`
-  padding: 3em;
-  background: #fff;
-  max-width: 45em;
-  margin-left: auto;
-  margin-right: auto;
+  padding: 1em;
+
+  ${media.tablet`padding: 2em;`};
 `;
 
 const Days = styled.ul`
@@ -28,10 +28,18 @@ const Days = styled.ul`
 `;
 
 const Day = styled.li`
-  flex: 0 0 12.5%;
+  flex: 0 0 25%;
   padding-left: 1rem;
   padding-top: 1rem;
   box-sizing: border-box;
+
+  ${media.tablet`
+    flex: 0 0 16.666%;
+  `};
+
+  ${media.desktop`
+    flex: 0 0 12.5%;
+  `};
 `;
 
 const DayContent = styled(Link)`
@@ -43,6 +51,13 @@ const DayContent = styled(Link)`
   padding-top: 100%;
   border-radius: 16px;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+
+  ${props =>
+    props.isFilled &&
+    css`
+      background-color: #262e47
+      color: #9396a3
+    `};
 `;
 
 const DayNumber = styled.h2`
@@ -88,51 +103,65 @@ const Admin = ({ match }) => {
           return (
             <>
               <Content>
+                Ajoutez un lien, une image ou une vidéo à chaque jour du
+                calendrier ci-dessous. Si vous n’avez rien à ajouter, seul une
+                animation apparaîtra au clic.
                 <Days>
                   {data.admin.days.map(day => (
-                    <Day key={day.id} isFilled={isFilled(day)}>
-                      <DayContent to={`/admin/jours/${day.id}`}>
+                    <Day key={day.id}>
+                      <DayContent
+                        to={`/admin/jours/${day.id}`}
+                        isFilled={isFilled(day)}
+                      >
                         <DayNumber>{day.number}</DayNumber>
                       </DayContent>
                     </Day>
                   ))}
                 </Days>
               </Content>
-              {console.log(data.admin.days)}
+
               <Route
                 path="/admin/jours/:dayId"
-                render={dayProps => (
-                  <DayForm
-                    day={find(
-                      data.admin.days,
-                      ({ id }) => id === dayProps.match.params.dayId,
-                    )}
-                  />
-                )}
+                render={({ match }) => {
+                  const { dayId } = match.params;
+                  const day = find(data.admin.days, ({ id }) => id === dayId);
+
+                  return (
+                    <>
+                      <Modal
+                        open
+                        style={{ marginTop: 50, padding: '100px 50px' }}
+                      >
+                        <ModalCloseButton style={{ fontSize: 32 }} to="/admin">
+                          <MdClose />
+                        </ModalCloseButton>
+
+                        <DayContent
+                          key={day.id}
+                          as="div"
+                          style={{
+                            position: 'absolute',
+                            top: -50,
+                            width: 100,
+                            paddingTop: 100,
+                          }}
+                        >
+                          <DayNumber>{day.number}</DayNumber>
+                        </DayContent>
+
+                        <DayForm
+                          day={find(data.admin.days, ({ id }) => id === dayId)}
+                        />
+                      </Modal>
+                      <ModalOverlay to="/admin" />
+                    </>
+                  );
+                }}
               />
             </>
           );
         }}
       </Query>
-
-      {/* <Mutation
-        mutation={CREATE_ADMIN}
-        variables={{ input: { email, newsletter: false } }}
-        onCompleted={({ createAdmin }) => console.log(createAdmin)}
-        onError={e => console.error(e)}
-      >
-        {(createAdmin, { data }) => (
-          <>
-            <input
-              value={email}
-              onChange={e => this.setState({ email: e.target.value })}
-            />
-            <button type="submit" onClick={createAdmin}>
-              Add Todo
-            </button>
-          </>
-        )}
-      </Mutation> */}
     </>
   );
 };
