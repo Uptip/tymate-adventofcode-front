@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { createGlobalStyle } from 'styled-components';
 import noise from 'images/noise.png';
 import { Switch, Route } from 'react-router-dom';
 import Admin from 'containers/Admin';
 import Calendar from 'containers/Calendar';
+import { CREATE_ADMIN } from 'queries';
+import { Mutation } from 'react-apollo';
+import get from 'lodash/get';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -15,19 +18,22 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-const App = () => (
-  <>
-    <GlobalStyle />
+const App = () => {
+  const [email, setEmail] = useState('');
 
-    <Switch>
-      <Route path="/admin/jours" component={Admin} />
-      <Route path="/admin/:token?" component={Admin} />
-      <Route path="/jours/:dayId" component={Calendar} />
-      <Route path="/:slug/jours/:dayId" component={Calendar} />
-      <Route path="/:slug?" component={Calendar} />
-    </Switch>
+  return (
+    <>
+      <GlobalStyle />
 
-    {/* <Mutation
+      <Switch>
+        <Route path="/admin/jours" component={Admin} />
+        <Route path="/admin/:token?" component={Admin} />
+        <Route path="/jours/:dayId" component={Calendar} />
+        <Route path="/:slug/jours/:dayId" component={Calendar} />
+        <Route path="/:slug?" component={Calendar} />
+      </Switch>
+
+      {/* <Mutation
           mutation={CREATE_ADMIN}
           variables={{ input: { email, newsletter: false } }}
           onCompleted={({ createAdmin }) => console.log(createAdmin)}
@@ -43,7 +49,7 @@ const App = () => (
           )}
         </Mutation> */}
 
-    {/* <Tinsels>
+      {/* <Tinsels>
         {[...Array(tinselsLength).keys()].map(index => (
           <Tinsel
             key={index}
@@ -56,26 +62,29 @@ const App = () => (
         ))}
       </Tinsels> */}
 
-    {/*<Mutation
-          mutation={CREATE_ADMIN}
-          variables={{ input: { email, newsletter: false } }}
-          onCompleted={({ createAdmin }) => console.log(createAdmin)}
-          onError={e => console.error(e)}
-        >
-          {(createAdmin, { data }) => (
+      <Mutation
+        mutation={CREATE_ADMIN}
+        variables={{ input: { email, newsletter: true } }}
+        onCompleted={({ createAdmin }) => console.log(createAdmin)}
+        onError={e => console.error(e)}
+      >
+        {(createAdmin, { data }) => {
+          if (get(data, 'createAdmin.user.id')) {
+            return <div>Check your mail</div>;
+          }
+
+          return (
             <>
-              <input
-                value={email}
-                onChange={e => this.setState({ email: e.target.value })}
-              />
+              <input value={email} onChange={e => setEmail(e.target.value)} />
               <button type="submit" onClick={createAdmin}>
                 Add Todo
               </button>
             </>
-          )}
-        </Mutation>
+          );
+        }}
+      </Mutation>
 
-        <Query query={GET_USER_CALENDAR}>
+      {/* <Query query={GET_USER_CALENDAR}>
           {({ loading, error, data }) => {
             if (loading) {
               return <div>Loading...</div>;
@@ -87,8 +96,9 @@ const App = () => (
 
             return <pre>{JSON.stringify(data, null, 2)}</pre>;
           }}
-        </Query>*/}
-  </>
-);
+        </Query> */}
+    </>
+  );
+};
 
 export default App;
