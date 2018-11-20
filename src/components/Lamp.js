@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import One from 'components/numbers/1';
 import Two from 'components/numbers/2';
 import Three from 'components/numbers/3';
@@ -55,6 +55,12 @@ const Circle = styled.circle`
   a:hover & {
     opacity: 1;
   }
+
+  ${props =>
+    props.isVisible &&
+    css`
+      opacity: 1;
+    `};
 `;
 
 const LampColor = ({ color, clicked }) => {
@@ -186,6 +192,8 @@ const Number = ({ number }) => {
       return <TwentyThree />;
     case 24:
       return <TwentyFour />;
+    default:
+      return null;
   }
 };
 
@@ -198,69 +206,84 @@ const Lamp = ({
   style,
   calendarRoute,
   linkTo,
-}) => (
-  <>
-    <Wrapper as={Boolean(linkTo) ? Link : undefined} style={style} to={linkTo}>
-      <svg width={85} height={85}>
-        <defs>
-          <linearGradient
-            x1="50%"
-            y1="0%"
-            x2="50%"
-            y2="100%"
-            id={`background-${color}`}
-          >
-            <LampColor color={color} />
-          </linearGradient>
+}) => {
+  const viewedDays = JSON.parse(localStorage.getItem('viewedDays')) || [];
+  const isViewed = viewedDays.indexOf(dayId) > -1;
 
-          <radialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            r="50%"
-            id={`light-${color}`}
-          >
-            <LampGlow color={color} />
-          </radialGradient>
-        </defs>
-        <g fill="none" fillRule="evenodd">
-          <path
-            d="M45.2 47s16.71 16.012-2.259 37.62a1.087 1.087 0 0 1-1.643.009c-19.216-21.39-2.689-37.592-2.689-37.592l3.295-.018L45.2 47z"
-            fill={`url(#background-${color})`}
-          />
-          <path
-            d="M45.2 47s16.71 16.012-2.259 37.62a1.087 1.087 0 0 1-1.643.009 55.782 55.782 0 0 1-3.26-3.965c9.949-11.97 11.237-23.186 3.866-33.645L45.2 47z"
-            fillOpacity={0.05}
-            fill="#000"
-          />
-          <path
-            d="M39 49l-2.816 21c-2.948-9.44.225-16.916 2.816-21z"
-            fillOpacity={0.4}
-            fill="#FFF"
-          />
-          <path
-            d="M37.813 40.31l-.018-3.14a1.13 1.13 0 0 1 1.122-1.134L45.042 36c.62-.003 1.13.502 1.134 1.122l.019 3.242h.078c.882.007 1.614.742 1.63 1.634L48 47.387A1.571 1.571 0 0 1 46.427 49l-8.7-.058c-.88-.005-1.615-.74-1.63-1.633L36 41.92a1.57 1.57 0 0 1 1.573-1.612l.24.002z"
-            fill="#000"
-          />
-          <Circle fill={`url(#light-${color})`} cx={42} cy={63} r={22} />
-        </g>
-      </svg>
-    </Wrapper>
+  return (
+    <>
+      <Wrapper
+        as={Boolean(linkTo) ? Link : undefined}
+        style={style}
+        to={linkTo}
+      >
+        <svg width={85} height={85}>
+          <defs>
+            <linearGradient
+              x1="50%"
+              y1="0%"
+              x2="50%"
+              y2="100%"
+              id={`background-${color}`}
+            >
+              <LampColor color={color} />
+            </linearGradient>
 
-    <NumberContainer
-      as={Boolean(linkTo) ? Link : undefined}
-      style={style}
-      to={linkTo}
-      style={{
-        left: style.left,
-        top: style.top + 50,
-        transform: 'translateX(-50%)',
-      }}
-    >
-      <Number number={number} />
-    </NumberContainer>
-  </>
-);
+            <radialGradient
+              cx="50%"
+              cy="50%"
+              fx="50%"
+              fy="50%"
+              r="50%"
+              id={`light-${color}`}
+            >
+              <LampGlow color={color} />
+            </radialGradient>
+          </defs>
+          <g fill="none" fillRule="evenodd">
+            <path
+              d="M45.2 47s16.71 16.012-2.259 37.62a1.087 1.087 0 0 1-1.643.009c-19.216-21.39-2.689-37.592-2.689-37.592l3.295-.018L45.2 47z"
+              fill={`url(#background-${color})`}
+            />
+            <path
+              d="M45.2 47s16.71 16.012-2.259 37.62a1.087 1.087 0 0 1-1.643.009 55.782 55.782 0 0 1-3.26-3.965c9.949-11.97 11.237-23.186 3.866-33.645L45.2 47z"
+              fillOpacity={0.05}
+              fill="#000"
+            />
+            <path
+              d="M39 49l-2.816 21c-2.948-9.44.225-16.916 2.816-21z"
+              fillOpacity={0.4}
+              fill="#FFF"
+            />
+            <path
+              d="M37.813 40.31l-.018-3.14a1.13 1.13 0 0 1 1.122-1.134L45.042 36c.62-.003 1.13.502 1.134 1.122l.019 3.242h.078c.882.007 1.614.742 1.63 1.634L48 47.387A1.571 1.571 0 0 1 46.427 49l-8.7-.058c-.88-.005-1.615-.74-1.63-1.633L36 41.92a1.57 1.57 0 0 1 1.573-1.612l.24.002z"
+              fill="#000"
+            />
+            <Circle
+              fill={`url(#light-${color})`}
+              cx={42}
+              cy={63}
+              r={22}
+              isVisible={Boolean(linkTo) && !isViewed}
+            />
+          </g>
+        </svg>
+      </Wrapper>
+
+      <NumberContainer
+        as={Boolean(linkTo) ? Link : undefined}
+        to={linkTo}
+        style={{
+          ...style,
+          left: style.left,
+          top: style.top + 50,
+          transform: 'translateX(-50%)',
+        }}
+      >
+        <Number number={number} />
+      </NumberContainer>
+    </>
+  );
+};
 
 export default Lamp;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Tinsel from 'components/Tinsel';
 import { useWindowSize } from 'the-platform';
-import find from 'lodash/find';
+import { find } from 'lodash';
 
 const Tinsels = styled.div``;
 
@@ -70,7 +70,6 @@ const CalendarContent = ({ days, calendarRoute }) => {
     { startY: 10, stopY: 30, lowHangingFruitX: 60, lowHangingFruitY: 60 },
   ];
 
-  console.log(tinselsLength, tinselsLength === 1);
   if (tinselsLength === 1) {
     return null;
   }

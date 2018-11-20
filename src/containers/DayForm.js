@@ -2,48 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Mutation } from 'react-apollo';
 import { UPDATE_DAY } from 'queries';
-import { Button } from 'ui';
+import { Button, Buttons, Input, Field, Label, FileLabel, Img } from 'ui';
+import { history } from 'index';
+import axios from 'axios';
+import SegmentedControls from 'components/SegmentedControls';
+import placeholder from 'images/placeholder.png';
 
-const useDayForm = defaultType => {
-  const [kind, setKind] = useState(defaultType);
-  const [URL, setURL] = useState('');
-  const [file, setFile] = useState();
-  const [image, setImage] = useState();
-
-  const handleURLChange = e => {
-    setURL(e.target.value);
-  };
-
-  const handleKindChange = e => {
-    setKind(e.target.value);
-  };
-
-  const handleFileChange = file => {
-    setFile(file);
-    const reader = new FileReader();
-    reader.onload = () => {
-      setImage(reader.result);
-    };
-    reader.readAsDataURL(file);
-  };
-
-  return {
-    kind,
-    setKind,
-    URL,
-    setURL,
-    handleURLChange,
-    handleKindChange,
-    handleFileChange,
-    file,
-    setFile,
-    image,
-  };
-};
-
-const DayForm = ({ day }) => {
+const DayForm = ({ day, onSuccess }) => {
   if (!day) {
-    return <Redirect to="/admin" />;
+    return <Redirect to="/mon-calendrier" />;
   }
 
   useEffect(
@@ -54,77 +21,134 @@ const DayForm = ({ day }) => {
     [day],
   );
 
-  const {
-    kind,
-    // setKind,
-    URL,
-    setURL,
-    handleURLChange,
-    handleKindChange,
-    // handleFileChange,
-    file,
-    // setFile,
-    image,
-  } = useDayForm('LINK');
+  const [userToken] = useState(localStorage.getItem('token'));
+  const [URL, setURL] = useState(day.link || '');
+  const [displayName, setDisplayName] = useState(day.displayName || '');
+  const [description, setDescription] = useState(day.description || '');
+  const [kind, setKind] = useState(
+    (day.contentType || '').toUpperCase() || 'LINK',
+  );
+
+  const handleKindChange = kind => {
+    setURL('');
+    setKind(kind);
+  };
+
+  const handleFileChange = async e => {
+    const formData = new FormData();
+    const file = e.target.files[0];
+
+    formData.append('attachment[image]', file);
+
+    try {
+      const { data } = await axios.post(
+        `${process.env.REACT_APP_API_BASE}/api/v1/attachments`,
+        formData,
+      );
+
+      setURL(data.url);
+    } catch (e) {}
+  };
 
   return (
-    <Mutation
-      mutation={UPDATE_DAY}
-      variables={{
-        updateDay: {
-          userToken: 'W0Z4cbOgSFdhoime2sc-rmHNXBADiwqGNg',
-          id: '25',
-          displayName: 'Foobar',
-          contentType: 'link',
-          link: 'https://google.fr',
-        },
-      }}
-      onCompleted={({ createAdmin }) => console.log(createAdmin)}
-      onError={e => console.error(e)}
-    >
-      {(mutate, { data }) => (
-        <form
-          onSubmit={e => {
-            e.preventDefault();
-            mutate();
-          }}
-        >
-          <div>
-            <label>
-              <input
-                type="radio"
-                name="kind"
-                value="LINK"
-                checked={kind === 'LINK'}
-                onChange={handleKindChange}
+    <div style={{ width: '100%' }}>
+      <Mutation
+        mutation={UPDATE_DAY}
+        variables={{
+          updateDay: {
+            id: day.id,
+            userToken,
+            displayName,
+            description,
+            link: URL,
+            contentType: kind.toLowerCase(),
+          },
+        }}
+        onCompleted={({ createAdmin }) => {
+          onSuccess();
+          history.push('/mon-calendrier');
+        }}
+      >
+        {(mutate, { data }) => (
+          <form
+            onSubmit={e => {
+              e.preventDefault();
+              mutate();
+            }}
+          >
+            <Field>
+              <Label htmlFor="dayFormDisplayName">Titre</Label>
+
+              <Input
+                id="dayFormDisplayName"
+                value={displayName}
+                onChange={e => setDisplayName(e.target.value)}
               />
-              Lien
-            </label>
-          </div>
-          <input value={URL} onChange={handleURLChange} />
+            </Field>
 
-          <div>
-            <label>
-              <input
-                type="radio"
-                name="kind"
-                value="IMAGE"
-                checked={kind === 'IMAGE'}
-                onChange={handleKindChange}
+            <Field>
+              <Label htmlFor="dayFormDescription">Description</Label>
+
+              <Input
+                id="dayFormDescription"
+                value={description}
+                onChange={e => setDescription(e.target.value)}
               />
-              Image
-            </label>
-          </div>
-          <img src={image} alt="" />
+            </Field>
 
-          <input type="file" />
+            <Field>
+              <Label>Contenu</Label>
 
-          <Button variant="primary" type="submit" onClick={mutate}>
-            Enregistrer
-          </Button>
-        </form>
-      )}
-    </Mutation>
+              <div style={{ display: 'flex' }}>
+                <SegmentedControls
+                  activeValue={kind}
+                  onSelect={handleKindChange}
+                  values={[
+                    {
+                      value: 'LINK',
+                      label: 'Lien',
+                    },
+                    {
+                      value: 'IMAGE',
+                      label: 'Image',
+                    },
+                    // {
+                    //   value: 'VIDEO',
+                    //   label: 'Vidéo YouTube',
+                    // },
+                  ]}
+                />
+              </div>
+
+              {kind !== 'IMAGE' && (
+                <Input value={URL} onChange={e => setURL(e.target.value)} />
+              )}
+
+              {kind === 'IMAGE' && (
+                <FileLabel htmlFor="dayFormFile" imageURL={URL}>
+                  <input
+                    type="file"
+                    onChange={handleFileChange}
+                    style={{ display: 'none' }}
+                    id="dayFormFile"
+                  />
+
+                  {!Boolean(URL) && <Img src={placeholder} />}
+
+                  {Boolean(URL) && <Img src={URL} />}
+                </FileLabel>
+              )}
+            </Field>
+
+            <Buttons>
+              <Button variant="primary" type="submit" onClick={mutate}>
+                Enregistrer
+              </Button>
+            </Buttons>
+          </form>
+        )}
+      </Mutation>
+    </div>
   );
 };
 

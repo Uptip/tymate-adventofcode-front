@@ -47,7 +47,7 @@ const Tinsel = ({
 
       setCoordinates(
         days.map((day, index) => {
-          const pointPercentage = (90 / days.length) * index + 10;
+          const pointPercentage = (80 / days.length) * index + 15;
           const pointCoordinates = getPointCoordinates(pointPercentage);
           const point1 = getPointCoordinates(pointPercentage - 2);
           const point2 = getPointCoordinates(pointPercentage + 2);

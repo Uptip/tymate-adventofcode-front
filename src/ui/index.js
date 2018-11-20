@@ -1,11 +1,13 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { Redirect, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Spinner from 'react-md-spinner';
 
 export const theme = {
   primaryGradient: 'linear-gradient(to bottom, #e9c450, #ecd17b)',
   primaryGradientDark: 'linear-gradient(to bottom, #ccaa45, #ccb46a)',
+  borderRadius: '4px',
+  primary: '#b31244',
 };
 
 export const base = 16;
@@ -15,6 +17,7 @@ export const viewportSizes = {
   desktop: 1200,
   medium: 960,
   tablet: 768,
+  phablet: 400,
 };
 
 const mediaQuery: Function = (...query) => (...rules) =>
@@ -25,6 +28,7 @@ const mediaQuery: Function = (...query) => (...rules) =>
   `;
 
 export const media = {
+  phablet: mediaQuery`(min-width: ${viewportSizes.phablet / 16}em)`,
   tablet: mediaQuery`(min-width: ${viewportSizes.tablet / 16}em)`,
   medium: mediaQuery`(min-width: ${viewportSizes.medium / 16}em)`,
   desktop: mediaQuery`(min-width: ${viewportSizes.desktop / 16}em)`,
@@ -68,6 +72,12 @@ export const ModalCloseButton = styled(Link)`
   top: 0.5em;
   font-size: 24px;
   color: inherit;
+  background: transparent;
+  border: 0;
+  outline: none;
+  appearance: none;
+  cursor: pointer;
+  z-index: 2;
 `;
 
 export const ModalOverlay = styled(Link)`
@@ -126,10 +136,16 @@ export const ButtonWrapper = styled.button`
   }
 `;
 
+export const Buttons = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+`;
+
 export const Button = ({ isLoading, children, icon, ...props }) => (
   <ButtonWrapper
     {...props}
-    as={Boolean(props.to) ? Link : null}
+    as={Boolean(props.to) ? Link : Boolean(props.href) ? 'a' : null}
     disabled={props.disabled || isLoading}
   >
     {isLoading && (
@@ -143,3 +159,61 @@ export const Button = ({ isLoading, children, icon, ...props }) => (
     {children}
   </ButtonWrapper>
 );
+
+export const Title = styled.h2`
+  font-family: 'Abril Fatface', cursive;
+  margin-top: 0;
+`;
+
+export const Kicker = styled.p``;
+
+export const Input = styled.input`
+  box-shadow: 0 0 0 2px #e9e9e9;
+  background-color: #ebebeb;
+  border: 0;
+  border-radius: 4px;
+  outline: none;
+  padding: 11px;
+  line-height: 1;
+  font-size: 16px;
+  width: 100%;
+
+  ${props =>
+    props.hasError &&
+    css`
+      box-shadow: 0 0 0 2px #b31244;
+    `};
+`;
+
+export const FieldError = styled.div`
+  margin-top: 1rem;
+  color: #b31244;
+`;
+
+export const Label = styled.label`
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  font-size: 1.189rem;
+`;
+
+export const Field = styled.div`
+  text-align: left;
+
+  + * {
+    margin-top: 1.5rem;
+  }
+`;
+
+export const FileLabel = styled.label`
+  display: block;
+  width: 100%;
+  cursor: pointer;
+  border-radius: 4px;
+  overflow: hidden;
+`;
+
+export const Img = styled.img`
+  display: block;
+  width: 100%;
+`;

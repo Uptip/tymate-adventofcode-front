@@ -2,7 +2,6 @@ import React from 'react';
 
 const SvgComponent = props => (
   <svg width={164} height={90} {...props}>
-    <title>{'gift-body'}</title>
     <defs>
       <path id="prefix__a" d="M17-74h143V90H17z" />
     </defs>

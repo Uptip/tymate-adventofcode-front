@@ -18,12 +18,13 @@ export const GET_USER_CALENDAR = gql`
         number
         contentType
         description
-        image
+        displayName
         link
       }
       calendar {
         id
         displayName
+        slug
       }
     }
   }
@@ -44,7 +45,6 @@ export const UPDATE_DAY = gql`
     updateDay(input: $updateDay) {
       day {
         link
-        image
         id
       }
     }
@@ -55,24 +55,34 @@ export const GET_CALENDAR = gql`
   query Calendar($slug: String!) {
     calendar(slug: $slug) {
       id
+      slug
       days {
         id
+        number
         contentType
+        description
         displayName
         link
-        number
       }
     }
   }
 `;
 
-export const FOO = gql`
-  query uploads {
-    uploads {
-      id
-      filename
-      mimetype
-      path
+export const CREATE_CALENDAR = gql`
+  mutation CreateCalendar($input: CreateCalendarInput!) {
+    createCalendar(input: $input) {
+      calendar {
+        id
+        displayName
+        days {
+          id
+          number
+          contentType
+          description
+          displayName
+          link
+        }
+      }
     }
   }
 `;

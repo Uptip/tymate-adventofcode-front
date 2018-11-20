@@ -1,15 +1,14 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
-import { Redirect, Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import GiftBody from './GiftBody';
 import GiftTopImage from './GiftTop';
 import { MdClose } from 'react-icons/md';
 import { useWindowSize } from 'the-platform';
-import sample from 'lodash/sample';
-import includes from 'lodash/includes';
-import uniq from 'lodash/uniq';
+import { sample, includes, uniq } from 'lodash';
 import P5Wrapper from 'react-p5-wrapper';
-import { Modal, ModalCloseButton, ModalOverlay } from 'ui';
+import { Modal, ModalCloseButton, ModalOverlay, Button, Buttons } from 'ui';
+import DayContent from 'components/DayContent';
 
 const GiftTop = styled(GiftTopImage)`
   transform: rotate(-20deg) translateX(20px) translateY(3px);
@@ -44,11 +43,23 @@ const DayHeader = styled.div`
   flex: 0 0 100%;
   position: relative;
   z-index: 1;
+  margin-bottom: 1rem;
 `;
 
-const DayNumber = styled.h2``;
+const DayNumber = styled.h2`
+  font-family: 'Abril Fatface', cursive;
+  color: #e9c450;
+  font-size: 7rem;
+  margin: 0;
+  line-height: 1;
+`;
 
-const DayMonth = styled.h3``;
+const DayMonth = styled.h3`
+  font-family: 'Abril Fatface', cursive;
+  letter-spacing: 0.07em;
+  font-size: 2rem;
+  margin: 0;
+`;
 
 const Day = ({ day, calendarRoute }) => {
   const currentDayIsInLocalStorage = includes(
@@ -57,7 +68,7 @@ const Day = ({ day, calendarRoute }) => {
   );
   const [isOpeningGift, setIsOpeningGift] = useState(false);
   const [hasSeenDay, setHasSeenDay] = useState(currentDayIsInLocalStorage);
-  const { width, height } = useWindowSize();
+  const { width } = useWindowSize();
 
   const canvasWidth = Math.min(width - 32, 800);
 
@@ -73,6 +84,18 @@ const Day = ({ day, calendarRoute }) => {
     },
     [isOpeningGift],
   );
+
+  useEffect(() => {
+    const viewedDays = JSON.parse(localStorage.getItem('viewedDays')) || [];
+    const isViewed = viewedDays.indexOf(day.id) > -1;
+
+    if (!isViewed) {
+      localStorage.setItem(
+        'viewedDays',
+        JSON.stringify([...viewedDays, day.id]),
+      );
+    }
+  }, []);
 
   if (!day) {
     return <Redirect to={calendarRoute} />;
@@ -90,7 +113,7 @@ const Day = ({ day, calendarRoute }) => {
           <DayMonth>décembre 2018</DayMonth>
         </DayHeader>
 
-        {hasSeenDay && <div>VU</div>}
+        {hasSeenDay && <DayContent day={day} />}
 
         {!hasSeenDay && (
           <>
@@ -239,14 +262,6 @@ const Day = ({ day, calendarRoute }) => {
                     }
 
                     addParticle() {
-                      const kind =
-                        Math.random() > 0.75
-                          ? 'triangle'
-                          : Math.random() < 0.25
-                            ? 'line'
-                            : Math.random() > 0.5
-                              ? 'circle'
-                              : 'square';
                       this.particles.push(
                         new Particle(this.origin, getParticleKind()),
                       );
@@ -280,12 +295,11 @@ const Day = ({ day, calendarRoute }) => {
             </GiftWrapper>
 
             {isOpeningGift && (
-              <button
-                style={{ flex: '0 0 100%', marginTop: 32 }}
-                onClick={() => setHasSeenDay(true)}
-              >
-                Mon cadeau
-              </button>
+              <Buttons style={{ flex: '0 0 100%', marginTop: 40 }}>
+                <Button variant="primary" onClick={() => setHasSeenDay(true)}>
+                  Mon cadeau
+                </Button>
+              </Buttons>
             )}
           </>
         )}
