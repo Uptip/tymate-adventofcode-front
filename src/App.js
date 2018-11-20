@@ -21,8 +21,6 @@ const App = () => {
     <>
       <GlobalStyle />
 
-      <div>Salut</div>
-
       <Switch>
         <Route path="/mon-calendrier/jours" component={Admin} />
         <Route path="/mon-calendrier/:token?" component={Admin} />
