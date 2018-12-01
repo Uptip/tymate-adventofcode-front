@@ -217,7 +217,7 @@ const Lamp = ({
         style={style}
         to={linkTo}
       >
-        <svg width={85} height={85}>
+        <svg viewBox="0 0 85 85" width={85} height={85}>
           <defs>
             <linearGradient
               x1="50%"

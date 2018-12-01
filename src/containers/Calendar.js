@@ -138,6 +138,7 @@ const Calendar = ({ match }) => {
             {Boolean(match.params.dayId) && (
               <Day day={day} calendarRoute={calendarRoute} />
             )}
+
             <CalendarContent days={days} calendarRoute={calendarRoute} />
           </>
         );
