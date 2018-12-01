@@ -97,6 +97,15 @@ const Day = ({ day, calendarRoute }) => {
     }
   }, []);
 
+  useEffect(() => {
+    document.documentElement.scrollTop = 0;
+    document.documentElement.style.overflowY = 'hidden';
+
+    return () => {
+      document.documentElement.style.overflowY = 'auto';
+    };
+  }, []);
+
   if (!day) {
     return <Redirect to={calendarRoute} />;
   }
