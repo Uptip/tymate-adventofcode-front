@@ -93,6 +93,7 @@ const Tinsel = ({
         (lamp, index) =>
           Boolean(coordinates[index]) ? (
             <Lamp
+              isTeapot={calendarRoute === '/teapot' && lamp.color === 'pink'}
               calendarRoute={calendarRoute}
               dayId={lamp.id}
               linkTo={
