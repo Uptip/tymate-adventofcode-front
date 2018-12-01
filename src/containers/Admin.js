@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { Query, Mutation } from 'react-apollo';
-import { Route } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 import { GET_USER_CALENDAR, CREATE_CALENDAR } from 'queries';
 import { history } from '../';
 import { Link } from 'react-router-dom';
@@ -117,6 +117,10 @@ const Admin = ({ match }) => {
     localStorage.setItem('token', token);
     history.push('/mon-calendrier');
   }, []);
+
+  if (!localStorage.getItem('token') && !match.params.token) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <>
