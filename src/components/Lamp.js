@@ -242,6 +242,14 @@ const Lamp = ({
             </radialGradient>
           </defs>
           <g fill="none" fillRule="evenodd">
+            <Circle
+              fill={`url(#light-${color})`}
+              cx={42}
+              cy={63}
+              r={22}
+              isVisible={Boolean(linkTo) && !isViewed}
+            />
+
             {!isTeapot && (
               <>
                 <path
@@ -264,6 +272,7 @@ const Lamp = ({
                 />
               </>
             )}
+
             {isTeapot && (
               <g fill="none" fillRule="evenodd">
                 <g transform="rotate(-90 54 30)">
@@ -321,13 +330,6 @@ const Lamp = ({
                 />
               </g>
             )}
-            <Circle
-              fill={`url(#light-${color})`}
-              cx={42}
-              cy={63}
-              r={22}
-              isVisible={Boolean(linkTo) && !isViewed}
-            />
           </g>
         </svg>
       </Wrapper>
