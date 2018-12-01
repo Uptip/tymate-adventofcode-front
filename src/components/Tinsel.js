@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 import Lamp from './Lamp';
+import { useWindowSize } from 'the-platform';
+
+const Wrapper = styled.div`
+  position: relative;
+  z-index: 1;
+`;
 
 const Tinsel = ({
   startY,
@@ -17,6 +24,7 @@ const Tinsel = ({
   const [x, setX] = useState(30);
   const [y, setY] = useState(50);
   const [coordinates, setCoordinates] = useState([]);
+  const { width: viewportWidth } = useWindowSize();
 
   const pathRef = React.createRef();
 
@@ -47,7 +55,8 @@ const Tinsel = ({
 
       setCoordinates(
         days.map((day, index) => {
-          const pointPercentage = (80 / days.length) * index + 15;
+          const pointPercentage =
+            (80 / days.length) * index + (viewportWidth > 500 ? 15 : 20);
           const pointCoordinates = getPointCoordinates(pointPercentage);
           const point1 = getPointCoordinates(pointPercentage - 2);
           const point2 = getPointCoordinates(pointPercentage + 2);
@@ -66,7 +75,7 @@ const Tinsel = ({
   );
 
   return (
-    <div style={{ position: 'relative' }}>
+    <Wrapper>
       <svg
         width={x2}
         height={height}
@@ -106,7 +115,7 @@ const Tinsel = ({
             />
           ) : null,
       )}
-    </div>
+    </Wrapper>
   );
 };
 
