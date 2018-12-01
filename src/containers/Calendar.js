@@ -59,13 +59,13 @@ const Calendar = ({ match }) => {
 
               {!userToken && (
                 <Button variant="primary" onClick={() => setModalIsShown(true)}>
-                  Créer mon calendrier
+                  Créer votre calendrier
                 </Button>
               )}
 
               {userToken && (
                 <Button variant="primary" to="/mon-calendrier">
-                  Modifier mon calendrier
+                  Modifier votre calendrier
                 </Button>
               )}
             </div>

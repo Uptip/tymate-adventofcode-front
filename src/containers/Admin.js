@@ -222,7 +222,7 @@ const Admin = ({ match }) => {
                       variant="primary"
                       to={`/${data.admin.calendar.slug}`}
                     >
-                      Voir mon calendrier
+                      Voir votre calendrier
                     </Button>
                   </Buttons>
                 )}
