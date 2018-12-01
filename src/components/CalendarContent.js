@@ -3,8 +3,21 @@ import styled from 'styled-components';
 import Tinsel from 'components/Tinsel';
 import { useWindowSize } from 'the-platform';
 import { find } from 'lodash';
+import snow from 'images/snow.png';
 
-const Tinsels = styled.div``;
+const Tinsels = styled.div`
+  padding-bottom: 160px;
+`;
+
+const Snow = styled.div`
+  position: absolute;
+  bottom: 0;
+  height: 200px;
+  left: 0;
+  width: 100%;
+  background-position: center center;
+  background-size: cover;
+`;
 
 const daysProps = [
   { number: 3, color: 'yellow' },
@@ -24,7 +37,7 @@ const daysProps = [
   { number: 10, color: 'blue' },
   { number: 19, color: 'red' },
   { number: 2, color: 'yellow' },
-  { number: 22, color: 'blue' },
+  { number: 22, color: 'pink' },
   { number: 15, color: 'yellow' },
   { number: 17, color: 'green' },
   { number: 7, color: 'red' },
@@ -96,6 +109,8 @@ const CalendarContent = ({ days, calendarRoute }) => {
           />
         ))}
       </Tinsels>
+
+      <Snow style={{ backgroundImage: `url(${snow})` }} />
     </>
   );
 };
