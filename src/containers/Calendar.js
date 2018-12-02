@@ -18,8 +18,8 @@ import { MdClose } from 'react-icons/md';
 import logo from 'images/logo.svg';
 
 const Logo = styled.img`
-  width: 64px;
-  height: 64px;
+  width: 48px;
+  height: 48px;
 `;
 
 const Calendar = ({ match }) => {
