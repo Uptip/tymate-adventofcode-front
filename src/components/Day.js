@@ -98,6 +98,7 @@ const Day = ({ day, calendarRoute }) => {
   }, []);
 
   useEffect(() => {
+    console.log(':o');
     document.documentElement.scrollTop = 0;
     document.documentElement.style.overflowY = 'hidden';
 
