@@ -41,7 +41,7 @@ export const Modal = styled.dialog`
   box-sizing: border-box;
   padding: 32px;
   text-align: center;
-  position: absolute;
+  position: fixed;
   z-index: 2;
   border-radius: 20px;
   box-shadow: 0 2px 60px rgba(0, 0, 0, 0.3);
@@ -53,6 +53,8 @@ export const Modal = styled.dialog`
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
 
   canvas {
     position: absolute;
