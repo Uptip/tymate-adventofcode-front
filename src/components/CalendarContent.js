@@ -1,9 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import Tinsel from 'components/Tinsel';
 import { useWindowSize } from 'the-platform';
 import { find } from 'lodash';
 import snow from 'images/snow.png';
+
+const FlickerEffect = createGlobalStyle`
+  @keyframes flicker {
+  	0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+  		opacity: .99;
+  	}
+
+  	20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+  		opacity: 0.4;
+  	}
+  }
+`;
 
 const Tinsels = styled.div`
   padding-bottom: 160px;
@@ -89,6 +101,7 @@ const CalendarContent = ({ days, calendarRoute }) => {
 
   return (
     <>
+      <FlickerEffect />
       <Tinsels>
         {[...Array(tinselsLength).keys()].map(index => (
           <Tinsel

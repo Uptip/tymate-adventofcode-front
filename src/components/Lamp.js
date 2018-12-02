@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import One from 'components/numbers/1';
 import Two from 'components/numbers/2';
@@ -47,19 +48,13 @@ const NumberContainer = styled.div`
 `;
 
 const Circle = styled.circle`
-  opacity: 0;
-  transition: opacity 150ms ease;
-
-  a:visited &,
-  a:active &,
-  a:hover & {
-    opacity: 1;
-  }
+  opacity: 1;
+  transition: opacity 50ms ease;
 
   ${props =>
-    props.isVisible &&
+    props.isFlickering &&
     css`
-      opacity: 1;
+      opacity: 0.4;
     `};
 `;
 
@@ -82,8 +77,8 @@ const LampColor = ({ color, clicked }) => {
     case 'blue':
       return (
         <>
-          <stop stopColor="#B4EC51" offset="0%" />
-          <stop stopColor="#3023AE" offset="100%" />
+          <stop stopColor="#91CAF7" offset="0%" />
+          <stop stopColor="#2C9CF4" offset="100%" />
         </>
       );
     case 'pink':
@@ -91,6 +86,13 @@ const LampColor = ({ color, clicked }) => {
         <>
           <stop stopColor="#F551DC" offset="0%" />
           <stop stopColor="#9F0482" offset="100%" />
+        </>
+      );
+    case 'off':
+      return (
+        <>
+          <stop stopColor="#f6f6f6" offset="0%" />
+          <stop stopColor="#999999" offset="100%" />
         </>
       );
     case 'yellow':
@@ -117,17 +119,24 @@ const LampGlow = ({ color }) => {
     case 'blue':
       return (
         <>
-          <stop stopColor="#E5EFFF" stopOpacity="0.8" offset="0%" />
-          <stop stopColor="#0074FF" stopOpacity="0.5" offset="15%" />
+          <stop stopColor="#E5EFFF" stopOpacity="1" offset="0%" />
+          <stop stopColor="#0074FF" stopOpacity="0.70" offset="15%" />
           <stop stopColor="#358CF6" stopOpacity="0" offset="100%" />
         </>
       );
     case 'red':
       return (
         <>
-          <stop stopColor="#ffeaec" stopOpacity="0.8" offset="0%" />
-          <stop stopColor="#F3001D" stopOpacity="0.5" offset="15%" />
+          <stop stopColor="#CF7482" stopOpacity="1" offset="0%" />
           <stop stopColor="#9F041B" stopOpacity="0" offset="100%" />
+        </>
+      );
+    case 'pink':
+      return (
+        <>
+          <stop stopColor="#ED42B4" stopOpacity="1" offset="0%" />
+          <stop stopColor="#ED42B4" stopOpacity="0.25" offset="80%" />
+          <stop stopColor="#ED42B4" stopOpacity="0" offset="100%" />
         </>
       );
     case 'yellow':
@@ -199,7 +208,6 @@ const Number = ({ number }) => {
 
 const Lamp = ({
   dayId,
-  to,
   color,
   number,
   textAngle,
@@ -207,9 +215,47 @@ const Lamp = ({
   calendarRoute,
   linkTo,
   isTeapot,
+  location,
 }) => {
   const viewedDays = JSON.parse(localStorage.getItem('viewedDays')) || [];
   const isViewed = viewedDays.indexOf(dayId) > -1;
+  const [shouldBeFlickering, setShouldBeFlickering] = useState(
+    !isViewed && Boolean(linkTo),
+  );
+  const [isGlowing, setIsGlowing] = useState(Boolean(linkTo));
+
+  let glowTimeout;
+
+  useEffect(
+    () => {
+      if (!shouldBeFlickering) {
+        return;
+      }
+
+      if (isGlowing) {
+        glowTimeout = setTimeout(
+          () => setIsGlowing(false),
+          Math.random() * 2000,
+        );
+      }
+
+      if (!isGlowing) {
+        glowTimeout = setTimeout(() => setIsGlowing(true), 50);
+      }
+
+      return () => clearTimeout(glowTimeout);
+    },
+    [isGlowing, shouldBeFlickering],
+  );
+
+  useEffect(
+    () => {
+      if (location.pathname.indexOf(`/jours/${dayId}`) > -1) {
+        setShouldBeFlickering(false);
+      }
+    },
+    [location.pathname],
+  );
 
   return (
     <>
@@ -218,7 +264,7 @@ const Lamp = ({
         style={style}
         to={linkTo}
       >
-        <svg viewBox="0 0 85 85" width={85} height={85}>
+        <svg width={100} height={100}>
           <defs>
             <linearGradient
               x1="50%"
@@ -241,94 +287,102 @@ const Lamp = ({
               <LampGlow color={color} />
             </radialGradient>
           </defs>
+
           <g fill="none" fillRule="evenodd">
-            <Circle
-              fill={`url(#light-${color})`}
-              cx={42}
-              cy={63}
-              r={22}
-              isVisible={Boolean(linkTo) && !isViewed}
-            />
+            {Boolean(linkTo) && (
+              <Circle
+                fill={`url(#light-${color})`}
+                cx={50}
+                cy={73}
+                r={27}
+                isFlickering={Boolean(linkTo) && !isGlowing}
+                style={{
+                  animationDelay: `${Math.floor(Math.random() * 2000)}ms`,
+                }}
+              />
+            )}
 
             {!isTeapot && (
               <>
                 <path
-                  d="M45.2 47s16.71 16.012-2.259 37.62a1.087 1.087 0 0 1-1.643.009c-19.216-21.39-2.689-37.592-2.689-37.592l3.295-.018L45.2 47z"
+                  d="M54.2 57s16.71 16.012-2.259 37.62a1.087 1.087 0 0 1-1.643.009c-19.216-21.39-2.689-37.592-2.689-37.592l3.295-.018L54.2 57z"
                   fill={`url(#background-${color})`}
                 />
                 <path
-                  d="M45.2 47s16.71 16.012-2.259 37.62a1.087 1.087 0 0 1-1.643.009 55.782 55.782 0 0 1-3.26-3.965c9.949-11.97 11.237-23.186 3.866-33.645L45.2 47z"
+                  d="M54.2 57s16.71 16.012-2.259 37.62a1.087 1.087 0 0 1-1.643.009 55.782 55.782 0 0 1-3.26-3.965c9.949-11.97 11.237-23.186 3.866-33.645L54.2 57z"
                   fillOpacity={0.05}
                   fill="#000"
                 />
                 <path
-                  d="M39 49l-2.816 21c-2.948-9.44.225-16.916 2.816-21z"
+                  d="M48 59l-2.816 21c-2.948-9.44.225-16.916 2.816-21z"
                   fillOpacity={0.4}
                   fill="#FFF"
                 />
                 <path
-                  d="M37.813 40.31l-.018-3.14a1.13 1.13 0 0 1 1.122-1.134L45.042 36c.62-.003 1.13.502 1.134 1.122l.019 3.242h.078c.882.007 1.614.742 1.63 1.634L48 47.387A1.571 1.571 0 0 1 46.427 49l-8.7-.058c-.88-.005-1.615-.74-1.63-1.633L36 41.92a1.57 1.57 0 0 1 1.573-1.612l.24.002z"
+                  d="M46.813 50.31l-.018-3.14a1.13 1.13 0 0 1 1.122-1.134L54.042 46c.62-.003 1.13.502 1.134 1.122l.019 3.242h.078c.882.007 1.614.742 1.63 1.634L57 57.387A1.571 1.571 0 0 1 55.427 59l-8.7-.058c-.88-.005-1.615-.74-1.63-1.633L45 51.92a1.57 1.57 0 0 1 1.573-1.612l.24.002z"
                   fill="#000"
                 />
               </>
             )}
 
             {isTeapot && (
-              <g fill="none" fillRule="evenodd">
-                <g transform="rotate(-90 54 30)">
+              <>
+                <g fill="none" fillRule="evenodd">
+                  <g transform="rotate(-90 61.5 30.5)">
+                    <path
+                      d="M2.435 11.011c-.263-.186-.547-.203-.76.038L.082 12.853c-.068.09-.18.32.089.646l8.922 10.613a12.11 12.11 0 0 1-.801-9.078l-5.857-4.023z"
+                      fill="#A61C78"
+                    />
+                    <path
+                      d="M7.765 18.316l-6.502-6.03c-.234-.22-.242-.413-.208-.535l-.973 1.102c-.068.09-.18.32.089.646l8.922 10.613a12.016 12.016 0 0 1-1.328-5.796z"
+                      fill="#8C1865"
+                    />
+                    <path
+                      d="M30.296 12.662c.416.74.757 1.527 1.013 2.352 3.044-1.016 6.126 1.166 6.126 4.27 0 2.488-2.027 4.504-4.527 4.504-.674 0-1.474-.148-2.05-.41a12.1 12.1 0 0 1-1.256 2.23c.948.467 2.176.731 3.306.731 3.917 0 7.092-3.158 7.092-7.055 0-4.95-4.99-8.35-9.704-6.622z"
+                      fill="#A61C78"
+                    />
+                    <path
+                      d="M15.582 29.984h8.442c8.15-2.988 10.46-13.088 5.052-19.37H10.53c-5.415 6.289-3.09 16.384 5.051 19.37z"
+                      fill="#ED42B4"
+                    />
+                    <path
+                      d="M17.477 10.615h-6.946c-5.415 6.288-3.09 16.384 5.051 19.37h8.442l.024-.01c-7.142-3.65-9.984-12.265-6.571-19.36z"
+                      fill="#C93E9B"
+                    />
+                    <path
+                      d="M10.338 8.292h18.93c-5.15-5.982-13.772-5.99-18.93 0z"
+                      fill="#ED42B4"
+                    />
+                    <path
+                      d="M21.529 3.924c-4.308-.643-8.45 1.183-11.191 4.368h5.876c1.326-2.244 3.197-3.907 5.315-4.368z"
+                      fill="#C93E9B"
+                    />
+                    <ellipse
+                      fill="#A61C78"
+                      cx={19.803}
+                      cy={1.906}
+                      rx={1.899}
+                      ry={1.889}
+                    />
+                    <path
+                      d="M20.753.271c-1.26-.725-2.849.18-2.849 1.636 0 1.457 1.59 2.36 2.849 1.635a1.884 1.884 0 0 1 0-3.27z"
+                      fill="#8C1865"
+                    />
+                    <path
+                      d="M29.534 10.695H10.072c-.62 0-1.236-.454-1.236-1.333 0-.68.553-1.23 1.236-1.23h19.462c.683 0 1.237.55 1.237 1.23 0 .883-.623 1.333-1.237 1.333z"
+                      fill="#A61C78"
+                    />
+                    <path
+                      d="M29.534 9.413H10.072c-.468 0-.875-.259-1.085-.64-.42.762.038 1.922 1.085 1.922h19.462c.604 0 1.237-.439 1.237-1.333a1.22 1.22 0 0 0-.151-.59c-.21.382-.617.641-1.086.641z"
+                      fill="#8C1865"
+                    />
+                  </g>
                   <path
-                    d="M2.435 11.011c-.263-.186-.547-.203-.76.038L.082 12.853c-.068.09-.18.32.089.646l8.922 10.613a12.11 12.11 0 0 1-.801-9.078l-5.857-4.023z"
-                    fill="#A61C78"
-                  />
-                  <path
-                    d="M7.765 18.316l-6.502-6.03c-.234-.22-.242-.413-.208-.535l-.973 1.102c-.068.09-.18.32.089.646l8.922 10.613a12.016 12.016 0 0 1-1.328-5.796z"
-                    fill="#8C1865"
-                  />
-                  <path
-                    d="M30.296 12.662c.416.74.757 1.527 1.013 2.352 3.044-1.016 6.126 1.166 6.126 4.27 0 2.488-2.027 4.504-4.527 4.504-.674 0-1.474-.148-2.05-.41a12.1 12.1 0 0 1-1.256 2.23c.948.467 2.176.731 3.306.731 3.917 0 7.092-3.158 7.092-7.055 0-4.95-4.99-8.35-9.704-6.622z"
-                    fill="#A61C78"
-                  />
-                  <path
-                    d="M15.582 29.984h8.442c8.15-2.988 10.46-13.088 5.052-19.37H10.53c-5.415 6.289-3.09 16.384 5.051 19.37z"
-                    fill="#ED42B4"
-                  />
-                  <path
-                    d="M17.477 10.615h-6.946c-5.415 6.288-3.09 16.384 5.051 19.37h8.442l.024-.01c-7.142-3.65-9.984-12.265-6.571-19.36z"
-                    fill="#C93E9B"
-                  />
-                  <path
-                    d="M10.338 8.292h18.93c-5.15-5.982-13.772-5.99-18.93 0z"
-                    fill="#ED42B4"
-                  />
-                  <path
-                    d="M21.529 3.924c-4.308-.643-8.45 1.183-11.191 4.368h5.876c1.326-2.244 3.197-3.907 5.315-4.368z"
-                    fill="#C93E9B"
-                  />
-                  <ellipse
-                    fill="#A61C78"
-                    cx={19.803}
-                    cy={1.906}
-                    rx={1.899}
-                    ry={1.889}
-                  />
-                  <path
-                    d="M20.753.271c-1.26-.725-2.849.18-2.849 1.636 0 1.457 1.59 2.36 2.849 1.635a1.884 1.884 0 0 1 0-3.27z"
-                    fill="#8C1865"
-                  />
-                  <path
-                    d="M29.534 10.695H10.072c-.62 0-1.236-.454-1.236-1.333 0-.68.553-1.23 1.236-1.23h19.462c.683 0 1.237.55 1.237 1.23 0 .883-.623 1.333-1.237 1.333z"
-                    fill="#A61C78"
-                  />
-                  <path
-                    d="M29.534 9.413H10.072c-.468 0-.875-.259-1.085-.64-.42.762.038 1.922 1.085 1.922h19.462c.604 0 1.237-.439 1.237-1.333a1.22 1.22 0 0 0-.151-.59c-.21.382-.617.641-1.086.641z"
-                    fill="#8C1865"
+                    d="M46.313 46.81l-.018-3.14a1.13 1.13 0 0 1 1.122-1.134l6.125-.036c.62-.003 1.13.502 1.134 1.122l.019 3.242h.078c.882.007 1.613.742 1.63 1.634l.096 5.389a1.571 1.571 0 0 1-1.572 1.613l-8.7-.058c-.88-.005-1.614-.74-1.63-1.633l-.096-5.389a1.57 1.57 0 0 1 1.572-1.612l.24.002z"
+                    fill="#000"
                   />
                 </g>
-                <path
-                  d="M38.814 39.31l-.018-3.14a1.13 1.13 0 0 1 1.122-1.134L46.043 35c.62-.003 1.13.502 1.134 1.122l.019 3.242h.078c.882.007 1.614.742 1.63 1.634L49 46.387A1.571 1.571 0 0 1 47.428 48l-8.7-.058c-.88-.005-1.615-.74-1.63-1.633L37 40.92a1.57 1.57 0 0 1 1.573-1.612l.24.002z"
-                  fill="#000"
-                />
-              </g>
+              </>
             )}
           </g>
         </svg>
@@ -350,4 +404,4 @@ const Lamp = ({
   );
 };
 
-export default Lamp;
+export default withRouter(Lamp);
