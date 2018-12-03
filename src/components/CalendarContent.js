@@ -5,7 +5,18 @@ import { useWindowSize } from 'the-platform';
 import { find } from 'lodash';
 import snow from 'images/snow.png';
 import christmasTree from 'images/christmas-tree.png';
+import santa from 'images/santa.png';
+import house from 'images/house.png';
+import penguin from 'images/penguin.png';
+import snowman from 'images/snowman.png';
 import { media } from 'ui';
+
+const images = [
+  { image: santa, position: 60 },
+  { image: house, position: 20 },
+  { image: penguin, position: 80 },
+  { image: snowman, position: 10 },
+];
 
 const Tinsels = styled.div`
   padding-bottom: 160px;
@@ -144,6 +155,7 @@ const CalendarContent = ({ days, calendarRoute }) => {
         {[...Array(tinselsLength).keys()].map(index => (
           <Tinsel
             key={index}
+            extraImage={images[index]}
             startY={tinselsCoordinates[index].startY}
             stopY={tinselsCoordinates[index].stopY}
             lowHangingFruit={{
