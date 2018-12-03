@@ -21,6 +21,16 @@ const GlobalStyle = createGlobalStyle`
     overflow-x: hidden;
     background-repeat: repeat;
   }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
 `;
 
 const App = () => {

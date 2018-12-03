@@ -28,6 +28,10 @@ import TwentyThree from 'components/numbers/23';
 import TwentyFour from 'components/numbers/24';
 
 const Wrapper = styled.div`
+  animation: fadeIn 50ms linear;
+`;
+
+const LampWrapper = styled.div`
   display: block;
 
   svg {
@@ -243,8 +247,10 @@ const Lamp = ({
     !isViewed && isLit,
   );
   const [isGlowing, setIsGlowing] = useState(isLit);
+  const [isShown, setIsShown] = useState(false);
 
   let glowTimeout;
+  let showTimeout;
 
   useEffect(
     () => {
@@ -268,6 +274,12 @@ const Lamp = ({
     [isGlowing, shouldBeFlickering],
   );
 
+  useEffect(() => {
+    showTimeout = setTimeout(() => setIsShown(true), 200);
+
+    return () => clearTimeout(showTimeout);
+  });
+
   useEffect(
     () => {
       if (location.pathname.indexOf(`/jours/${dayId}`) > -1) {
@@ -277,9 +289,13 @@ const Lamp = ({
     [location.pathname],
   );
 
+  if (!isShown) {
+    return null;
+  }
+
   return (
-    <>
-      <Wrapper
+    <Wrapper>
+      <LampWrapper
         as={Boolean(linkTo) ? Link : undefined}
         style={style}
         to={linkTo}
@@ -415,7 +431,7 @@ const Lamp = ({
             )}
           </g>
         </svg>
-      </Wrapper>
+      </LampWrapper>
 
       <NumberContainer
         as={Boolean(linkTo) ? Link : undefined}
@@ -428,7 +444,7 @@ const Lamp = ({
       >
         <Number number={number} />
       </NumberContainer>
-    </>
+    </Wrapper>
   );
 };
 

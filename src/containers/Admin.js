@@ -123,155 +123,150 @@ const Admin = ({ match }) => {
   }
 
   return (
-    <>
-      <Query query={GET_USER_CALENDAR} variables={{ token: userToken }}>
-        {({ loading, error, data, refetch }) => {
-          if (loading) {
-            return <div>Loading…</div>;
-          }
+    <Query query={GET_USER_CALENDAR} variables={{ token: userToken }}>
+      {({ loading, error, data, refetch }) => {
+        if (loading) {
+          return <div>Loading…</div>;
+        }
 
-          if (error) {
-            return (
-              <Mutation
-                mutation={CREATE_CALENDAR}
-                variables={{
-                  input: { userToken, displayName },
-                }}
-              >
-                {(createCalendar, { data, loading, error }) => {
-                  if (data) {
-                    refetch();
-                    return <div />;
-                  }
-
-                  return (
-                    <Modal open>
-                      <div>
-                        <Title>Création de votre calendrier</Title>
-                        <Kicker>
-                          Pour commencer la création de votre calendrier,
-                          commencez par lui donner un nom.
-                        </Kicker>
-
-                        <form
-                          onSubmit={e => {
-                            e.preventDefault();
-                            createCalendar();
-                          }}
-                        >
-                          <Input
-                            hasError={get(error, 'message', '')}
-                            value={displayName}
-                            onChange={e => setDisplayName(e.target.value)}
-                          />
-
-                          {get(error, 'message', '').indexOf(
-                            "Slug n'est pas disponible",
-                          ) > -1 && (
-                            <FieldError>
-                              Ce nom de calendrier est déjà pris
-                            </FieldError>
-                          )}
-
-                          <Buttons>
-                            <Button variant="primary">Suivant</Button>
-                          </Buttons>
-                        </form>
-                      </div>
-                    </Modal>
-                  );
-                }}
-              </Mutation>
-            );
-          }
-
+        if (error) {
           return (
-            <>
-              <Content>
-                <div style={{ color: '#fff' }}>
-                  <Title>Mon calendrier</Title>
-                  <Kicker>
-                    Ajoutez un lien, une image ou une vidéo à chaque jour du
-                    calendrier ci-dessous. Si vous n’avez rien à ajouter, seul
-                    une animation apparaîtra au clic.
-                  </Kicker>
-                </div>
+            <Mutation
+              mutation={CREATE_CALENDAR}
+              variables={{
+                input: { userToken, displayName },
+              }}
+            >
+              {(createCalendar, { data, loading, error }) => {
+                if (data) {
+                  refetch();
+                  return <div />;
+                }
 
-                <Days>
-                  {data.admin.days.map(day => (
-                    <Day key={day.id}>
-                      <DayContent
-                        to={`/mon-calendrier/jours/${day.id}`}
-                        isFilled={isFilled(day)}
+                return (
+                  <Modal open>
+                    <div>
+                      <Title>Création de votre calendrier</Title>
+                      <Kicker>
+                        Pour commencer la création de votre calendrier,
+                        commencez par lui donner un nom.
+                      </Kicker>
+
+                      <form
+                        onSubmit={e => {
+                          e.preventDefault();
+                          createCalendar();
+                        }}
                       >
-                        {isFilled(day) && (
-                          <Icon>
-                            <MdEdit />
-                          </Icon>
+                        <Input
+                          hasError={get(error, 'message', '')}
+                          value={displayName}
+                          onChange={e => setDisplayName(e.target.value)}
+                        />
+
+                        {get(error, 'message', '').indexOf(
+                          "Slug n'est pas disponible",
+                        ) > -1 && (
+                          <FieldError>
+                            Ce nom de calendrier est déjà pris
+                          </FieldError>
                         )}
 
+                        <Buttons>
+                          <Button variant="primary">Suivant</Button>
+                        </Buttons>
+                      </form>
+                    </div>
+                  </Modal>
+                );
+              }}
+            </Mutation>
+          );
+        }
+
+        return (
+          <>
+            <Content>
+              <div style={{ color: '#fff' }}>
+                <Title>Mon calendrier</Title>
+                <Kicker>
+                  Ajoutez un lien, une image ou une vidéo à chaque jour du
+                  calendrier ci-dessous. Si vous n’avez rien à ajouter, seul une
+                  animation apparaîtra au clic.
+                </Kicker>
+              </div>
+
+              <Days>
+                {data.admin.days.map(day => (
+                  <Day key={day.id}>
+                    <DayContent
+                      to={`/mon-calendrier/jours/${day.id}`}
+                      isFilled={isFilled(day)}
+                    >
+                      {isFilled(day) && (
+                        <Icon>
+                          <MdEdit />
+                        </Icon>
+                      )}
+
+                      <DayNumber>{day.number}</DayNumber>
+                    </DayContent>
+                  </Day>
+                ))}
+              </Days>
+
+              {data.admin.calendar.slug && (
+                <Buttons>
+                  <Button variant="primary" to={`/${data.admin.calendar.slug}`}>
+                    Voir votre calendrier
+                  </Button>
+                </Buttons>
+              )}
+            </Content>
+
+            <Route
+              path="/mon-calendrier/jours/:dayId"
+              render={({ match }) => {
+                const { dayId } = match.params;
+                const day = find(data.admin.days, ({ id }) => id === dayId);
+
+                return (
+                  <>
+                    <Modal open style={{ paddingTop: 150 }}>
+                      <ModalCloseButton
+                        style={{ fontSize: 32 }}
+                        to="/mon-calendrier"
+                      >
+                        <MdClose />
+                      </ModalCloseButton>
+
+                      <DayContent
+                        key={day.id}
+                        as="div"
+                        style={{
+                          position: 'absolute',
+                          top: 32,
+                          width: 100,
+                          paddingTop: 100,
+                        }}
+                      >
                         <DayNumber>{day.number}</DayNumber>
                       </DayContent>
-                    </Day>
-                  ))}
-                </Days>
 
-                {data.admin.calendar.slug && (
-                  <Buttons>
-                    <Button
-                      variant="primary"
-                      to={`/${data.admin.calendar.slug}`}
-                    >
-                      Voir votre calendrier
-                    </Button>
-                  </Buttons>
-                )}
-              </Content>
-
-              <Route
-                path="/mon-calendrier/jours/:dayId"
-                render={({ match }) => {
-                  const { dayId } = match.params;
-                  const day = find(data.admin.days, ({ id }) => id === dayId);
-
-                  return (
-                    <>
-                      <Modal open style={{ paddingTop: 150 }}>
-                        <ModalCloseButton
-                          style={{ fontSize: 32 }}
-                          to="/mon-calendrier"
-                        >
-                          <MdClose />
-                        </ModalCloseButton>
-
-                        <DayContent
-                          key={day.id}
-                          as="div"
-                          style={{
-                            position: 'absolute',
-                            top: 32,
-                            width: 100,
-                            paddingTop: 100,
-                          }}
-                        >
-                          <DayNumber>{day.number}</DayNumber>
-                        </DayContent>
-
-                        <DayForm
-                          day={find(data.admin.days, ({ id }) => id === dayId)}
-                          onSuccess={refetch}
-                        />
-                      </Modal>
-                      <ModalOverlay to="/mon-calendrier" />
-                    </>
-                  );
-                }}
-              />
-            </>
-          );
-        }}
-      </Query>
-    </>
+                      <DayForm
+                        day={find(data.admin.days, ({ id }) => id === dayId)}
+                        onSuccess={refetch}
+                      />
+                    </Modal>
+                    <ModalOverlay to="/mon-calendrier" />
+                  </>
+                );
+              }}
+            />
+          </>
+        );
+      }}
+    </Query>
   );
 };
 
