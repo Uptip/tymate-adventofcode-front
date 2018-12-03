@@ -2,6 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import Spinner from 'react-md-spinner';
+import TextareaAutosize from 'react-textarea-autosize';
 
 export const theme = {
   primaryGradient: 'linear-gradient(to bottom, #e9c450, #ecd17b)',
@@ -219,7 +220,7 @@ export const Input = styled.input`
     `};
 `;
 
-export const Textarea = styled.textarea`
+export const Textarea = styled(TextareaAutosize)`
   box-shadow: 0 0 0 2px #e9e9e9;
   background-color: #ebebeb;
   border: 0;

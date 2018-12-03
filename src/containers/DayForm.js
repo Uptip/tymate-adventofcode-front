@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Mutation } from 'react-apollo';
 import { UPDATE_DAY } from 'queries';
@@ -21,14 +21,6 @@ const DayForm = ({ day, onSuccess }) => {
   if (!day) {
     return <Redirect to="/mon-calendrier" />;
   }
-
-  useEffect(
-    () => {
-      const { link } = day;
-      setURL(link || '');
-    },
-    [day],
-  );
 
   const [userToken] = useState(localStorage.getItem('token'));
   const [URL, setURL] = useState(day.link || '');
@@ -97,6 +89,14 @@ const DayForm = ({ day, onSuccess }) => {
 
             <Field>
               <Label htmlFor="dayFormDescription">Description</Label>
+
+              <Textarea
+                id="dayFormDescription"
+                value={description || ''}
+                onChange={e => setDescription(e.target.value)}
+                minRows={4}
+                maxRows={6}
+              />
             </Field>
 
             <Field>
