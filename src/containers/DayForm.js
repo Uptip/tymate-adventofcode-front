@@ -97,13 +97,6 @@ const DayForm = ({ day, onSuccess }) => {
 
             <Field>
               <Label htmlFor="dayFormDescription">Description</Label>
-
-              <Textarea
-                id="dayFormDescription"
-                value={description}
-                onChange={e => setDescription(e.target.value)}
-                style={{ height: 118 }}
-              />
             </Field>
 
             <Field>
