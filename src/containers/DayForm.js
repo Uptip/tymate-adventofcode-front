@@ -102,8 +102,7 @@ const DayForm = ({ day, onSuccess }) => {
                 id="dayFormDescription"
                 value={description}
                 onChange={e => setDescription(e.target.value)}
-                minRows={3}
-                maxRows={6}
+                style={{ height: 118 }}
               />
             </Field>
 
