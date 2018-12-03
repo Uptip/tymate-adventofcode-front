@@ -56,6 +56,7 @@ export const GET_CALENDAR = gql`
     calendar(slug: $slug) {
       id
       slug
+      displayName
       days {
         id
         number

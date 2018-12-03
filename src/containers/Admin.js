@@ -20,6 +20,7 @@ import {
   FieldError,
 } from 'ui';
 import { MdClose, MdEdit } from 'react-icons/md';
+import Helmet from 'react-helmet';
 
 const Content = styled.div`
   padding: 1em;
@@ -186,6 +187,10 @@ const Admin = ({ match }) => {
 
         return (
           <>
+            <Helmet>
+              <title>{`Mon calendrier – Calendrier de l’Avent`}</title>
+            </Helmet>
+
             <Content>
               <div style={{ color: '#fff' }}>
                 <Title>Mon calendrier</Title>
