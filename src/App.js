@@ -1,9 +1,16 @@
 import React from 'react';
-import { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import noise from 'images/noise.png';
 import { Switch, Route } from 'react-router-dom';
 import Admin from 'containers/Admin';
 import Calendar from 'containers/Calendar';
+import snow from 'images/snow.svg';
+
+const Wrapper = styled.div`
+  background-image: url("${snow}");
+  background-size: cover;
+  min-height: 100vh;
+`;
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -21,13 +28,15 @@ const App = () => {
     <>
       <GlobalStyle />
 
-      <Switch>
-        <Route path="/mon-calendrier/jours" component={Admin} />
-        <Route path="/mon-calendrier/:token?" component={Admin} />
-        <Route path="/jours/:dayId" component={Calendar} />
-        <Route path="/:slug/jours/:dayId" component={Calendar} />
-        <Route path="/:slug?" component={Calendar} />
-      </Switch>
+      <Wrapper>
+        <Switch>
+          <Route path="/mon-calendrier/jours" component={Admin} />
+          <Route path="/mon-calendrier/:token?" component={Admin} />
+          <Route path="/jours/:dayId" component={Calendar} />
+          <Route path="/:slug/jours/:dayId" component={Calendar} />
+          <Route path="/:slug?" component={Calendar} />
+        </Switch>
+      </Wrapper>
     </>
   );
 };

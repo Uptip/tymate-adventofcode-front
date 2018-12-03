@@ -53,8 +53,8 @@ export const Modal = styled.dialog`
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
-  max-height: calc(100vh - 64px - env(safe-area-inset-bottom));
   max-height: calc(100vh - 64px);
+  max-height: calc(100vh - 64px - env(safe-area-inset-bottom));
   overflow-y: auto;
 
   canvas {
