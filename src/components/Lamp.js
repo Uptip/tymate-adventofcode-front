@@ -40,6 +40,14 @@ const NumberContainer = styled.div`
   position: absolute;
   padding-top: 0.5em;
   max-width: 12vw;
+  transform: translateX(-50%);
+  opacity: 0.7;
+
+  ${props =>
+    props.isLit &&
+    css`
+      opacity: 1;
+    `};
 
   svg {
     display: block;
@@ -55,6 +63,17 @@ const Circle = styled.circle`
     props.isFlickering &&
     css`
       opacity: 0.4;
+    `};
+`;
+
+const Path = styled.path`
+  opacity: 0.7;
+  transition: opacity 50ms ease;
+
+  ${props =>
+    props.isLit &&
+    css`
+      opacity: 1;
     `};
 `;
 
@@ -135,7 +154,7 @@ const LampGlow = ({ color }) => {
       return (
         <>
           <stop stopColor="#ED42B4" stopOpacity="1" offset="0%" />
-          <stop stopColor="#ED42B4" stopOpacity="0.25" offset="80%" />
+          <stop stopColor="#ED42B4" stopOpacity="0.25" offset="70%" />
           <stop stopColor="#ED42B4" stopOpacity="0" offset="100%" />
         </>
       );
@@ -219,10 +238,11 @@ const Lamp = ({
 }) => {
   const viewedDays = JSON.parse(localStorage.getItem('viewedDays')) || [];
   const isViewed = viewedDays.indexOf(dayId) > -1;
+  const isLit = Boolean(linkTo);
   const [shouldBeFlickering, setShouldBeFlickering] = useState(
-    !isViewed && Boolean(linkTo),
+    !isViewed && isLit,
   );
-  const [isGlowing, setIsGlowing] = useState(Boolean(linkTo));
+  const [isGlowing, setIsGlowing] = useState(isLit);
 
   let glowTimeout;
 
@@ -304,9 +324,10 @@ const Lamp = ({
 
             {!isTeapot && (
               <>
-                <path
+                <Path
                   d="M54.2 57s16.71 16.012-2.259 37.62a1.087 1.087 0 0 1-1.643.009c-19.216-21.39-2.689-37.592-2.689-37.592l3.295-.018L54.2 57z"
                   fill={`url(#background-${color})`}
+                  isLit={isGlowing}
                 />
                 <path
                   d="M54.2 57s16.71 16.012-2.259 37.62a1.087 1.087 0 0 1-1.643.009 55.782 55.782 0 0 1-3.26-3.965c9.949-11.97 11.237-23.186 3.866-33.645L54.2 57z"
@@ -329,33 +350,40 @@ const Lamp = ({
               <>
                 <g fill="none" fillRule="evenodd">
                   <g transform="rotate(-90 61.5 30.5)">
-                    <path
+                    <Path
                       d="M2.435 11.011c-.263-.186-.547-.203-.76.038L.082 12.853c-.068.09-.18.32.089.646l8.922 10.613a12.11 12.11 0 0 1-.801-9.078l-5.857-4.023z"
                       fill="#A61C78"
+                      isLit={isGlowing}
                     />
-                    <path
+                    <Path
                       d="M7.765 18.316l-6.502-6.03c-.234-.22-.242-.413-.208-.535l-.973 1.102c-.068.09-.18.32.089.646l8.922 10.613a12.016 12.016 0 0 1-1.328-5.796z"
                       fill="#8C1865"
+                      isLit={isGlowing}
                     />
-                    <path
+                    <Path
                       d="M30.296 12.662c.416.74.757 1.527 1.013 2.352 3.044-1.016 6.126 1.166 6.126 4.27 0 2.488-2.027 4.504-4.527 4.504-.674 0-1.474-.148-2.05-.41a12.1 12.1 0 0 1-1.256 2.23c.948.467 2.176.731 3.306.731 3.917 0 7.092-3.158 7.092-7.055 0-4.95-4.99-8.35-9.704-6.622z"
                       fill="#A61C78"
+                      isLit={isGlowing}
                     />
-                    <path
+                    <Path
                       d="M15.582 29.984h8.442c8.15-2.988 10.46-13.088 5.052-19.37H10.53c-5.415 6.289-3.09 16.384 5.051 19.37z"
                       fill="#ED42B4"
+                      isLit={isGlowing}
                     />
-                    <path
+                    <Path
                       d="M17.477 10.615h-6.946c-5.415 6.288-3.09 16.384 5.051 19.37h8.442l.024-.01c-7.142-3.65-9.984-12.265-6.571-19.36z"
                       fill="#C93E9B"
+                      isLit={isGlowing}
                     />
-                    <path
+                    <Path
                       d="M10.338 8.292h18.93c-5.15-5.982-13.772-5.99-18.93 0z"
                       fill="#ED42B4"
+                      isLit={isGlowing}
                     />
-                    <path
+                    <Path
                       d="M21.529 3.924c-4.308-.643-8.45 1.183-11.191 4.368h5.876c1.326-2.244 3.197-3.907 5.315-4.368z"
                       fill="#C93E9B"
+                      isLit={isGlowing}
                     />
                     <ellipse
                       fill="#A61C78"
@@ -364,9 +392,10 @@ const Lamp = ({
                       rx={1.899}
                       ry={1.889}
                     />
-                    <path
+                    <Path
                       d="M20.753.271c-1.26-.725-2.849.18-2.849 1.636 0 1.457 1.59 2.36 2.849 1.635a1.884 1.884 0 0 1 0-3.27z"
                       fill="#8C1865"
+                      isLit={isGlowing}
                     />
                     <path
                       d="M29.534 10.695H10.072c-.62 0-1.236-.454-1.236-1.333 0-.68.553-1.23 1.236-1.23h19.462c.683 0 1.237.55 1.237 1.23 0 .883-.623 1.333-1.237 1.333z"
@@ -393,10 +422,9 @@ const Lamp = ({
         to={linkTo}
         style={{
           ...style,
-          left: style.left,
-          top: style.top + 50,
-          transform: 'translateX(-50%)',
+          top: style.top + 100,
         }}
+        isLit={isLit}
       >
         <Number number={number} />
       </NumberContainer>
