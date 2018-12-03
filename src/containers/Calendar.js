@@ -15,7 +15,6 @@ import {
   Input,
 } from 'ui';
 import { MdClose } from 'react-icons/md';
-import Helmet from 'react-helmet';
 import logo from 'images/logo.svg';
 
 const Logo = styled.img`
@@ -46,13 +45,10 @@ const Calendar = ({ match }) => {
           ? `/${match.params.slug}`
           : '';
 
+        document.title = `${data.calendar.displayName} – Calendrier de l’Avent`;
+
         return (
           <>
-            <Helmet>
-              <title>{`${
-                data.calendar.displayName
-              } – Calendrier de l’Avent`}</title>
-            </Helmet>
             <div
               style={{
                 display: 'flex',

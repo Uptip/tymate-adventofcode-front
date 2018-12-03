@@ -20,7 +20,6 @@ import {
   FieldError,
 } from 'ui';
 import { MdClose, MdEdit } from 'react-icons/md';
-import Helmet from 'react-helmet';
 import {
   FacebookShareButton,
   LinkedinShareButton,
@@ -164,6 +163,8 @@ const Admin = ({ match }) => {
   });
 
   useEffect(() => {
+    document.title = 'Votre calendrier – Calendrier de l’Avent';
+
     const { token } = match.params;
 
     if (!token) {
@@ -247,10 +248,6 @@ const Admin = ({ match }) => {
 
         return (
           <>
-            <Helmet>
-              <title>{`Votre calendrier – Calendrier de l’Avent`}</title>
-            </Helmet>
-
             <Content>
               <div style={{ color: '#fff' }}>
                 <Title size="big">Votre calendrier</Title>

@@ -19,7 +19,6 @@
     "react-apollo": "^2.2.4",
     "react-clipboard.js": "^2.0.2",
     "react-dom": "^16.7.0-alpha.0",
-    "react-helmet": "^5.2.0",
     "react-icons": "^3.2.2",
     "react-md-spinner": "^0.3.0",
     "react-p5-wrapper": "^0.0.4",
