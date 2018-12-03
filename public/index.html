@@ -8,6 +8,14 @@
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
     <link href="https://fonts.googleapis.com/css?family=Abril+Fatface" rel="stylesheet">
     <title>Advent Calendar</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=%REACT_APP_GOOGLE_ANALYTICS_UA%"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '%REACT_APP_GOOGLE_ANALYTICS_UA%');
+    </script>
+
   </head>
   <body>
     <noscript>
