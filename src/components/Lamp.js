@@ -41,7 +41,7 @@ const NumberContainer = styled.div`
   padding-top: 0.5em;
   max-width: 12vw;
   transform: translateX(-50%);
-  opacity: 0.7;
+  opacity: 0.5;
 
   ${props =>
     props.isLit &&
@@ -67,7 +67,7 @@ const Circle = styled.circle`
 `;
 
 const Path = styled.path`
-  opacity: 0.7;
+  opacity: 0.5;
   transition: opacity 50ms ease;
 
   ${props =>
