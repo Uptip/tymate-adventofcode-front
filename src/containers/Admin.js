@@ -236,10 +236,7 @@ const Admin = ({ match }) => {
 
                   return (
                     <>
-                      <Modal
-                        open
-                        style={{ marginTop: 50, padding: '100px 50px' }}
-                      >
+                      <Modal open style={{ padding: '100px 50px' }}>
                         <ModalCloseButton
                           style={{ fontSize: 32 }}
                           to="/mon-calendrier"
