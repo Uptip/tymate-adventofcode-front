@@ -2,6 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import Spinner from 'react-md-spinner';
+import TextareaAutosize from 'react-textarea-autosize';
 
 export const theme = {
   primaryGradient: 'linear-gradient(to bottom, #e9c450, #ecd17b)',
@@ -189,6 +190,9 @@ export const Title = styled.h2`
 `;
 
 export const Kicker = styled.p`
+  white-space: pre-wrap;
+  text-align: left;
+
   ${props =>
     props.size === 'big' &&
     css`
@@ -208,6 +212,25 @@ export const Input = styled.input`
   line-height: 1;
   font-size: 16px;
   width: 100%;
+
+  ${props =>
+    props.hasError &&
+    css`
+      box-shadow: 0 0 0 2px #b31244;
+    `};
+`;
+
+export const Textarea = styled(TextareaAutosize)`
+  box-shadow: 0 0 0 2px #e9e9e9;
+  background-color: #ebebeb;
+  border: 0;
+  border-radius: 4px;
+  outline: none;
+  padding: 11px;
+  line-height: 1;
+  font-size: 16px;
+  width: 100%;
+  resize: none;
 
   ${props =>
     props.hasError &&

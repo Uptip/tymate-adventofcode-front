@@ -2,7 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Mutation } from 'react-apollo';
 import { UPDATE_DAY } from 'queries';
-import { Button, Buttons, Input, Field, Label, FileLabel, Img } from 'ui';
+import {
+  Button,
+  Buttons,
+  Input,
+  Field,
+  Label,
+  FileLabel,
+  Img,
+  Textarea,
+} from 'ui';
 import { history } from 'index';
 import axios from 'axios';
 import SegmentedControls from 'components/SegmentedControls';
@@ -89,10 +98,12 @@ const DayForm = ({ day, onSuccess }) => {
             <Field>
               <Label htmlFor="dayFormDescription">Description</Label>
 
-              <Input
+              <Textarea
                 id="dayFormDescription"
                 value={description}
                 onChange={e => setDescription(e.target.value)}
+                minRows={3}
+                maxRows={6}
               />
             </Field>
 
