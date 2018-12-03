@@ -4,6 +4,8 @@ import Tinsel from 'components/Tinsel';
 import { useWindowSize } from 'the-platform';
 import { find } from 'lodash';
 import snow from 'images/snow.png';
+import christmasTree from 'images/christmas-tree.png';
+import { media } from 'ui';
 
 const Tinsels = styled.div`
   padding-bottom: 160px;
@@ -17,6 +19,55 @@ const Snow = styled.div`
   width: 100%;
   background-position: center center;
   background-size: cover;
+`;
+
+const ChristmasTreeOne = styled.img`
+  position: absolute;
+  bottom: 56px;
+  left: 92px;
+  z-index: 2;
+
+  ${media.tablet`
+    left: 48px;
+    bottom: 32px;
+  `};
+
+  ${media.desktop`
+    bottom: 56px;
+    left: 92px;
+  `};
+`;
+
+const ChristmasTreeTwo = styled.img`
+  position: absolute;
+  bottom: 28px;
+  left: 180px;
+  z-index: 3;
+
+  ${media.tablet`
+    left: 194px;
+    bottom: 32px;
+  `};
+
+  ${media.desktop`
+    bottom: 28px;
+    left: 180px;
+  `};
+`;
+
+const ChristmasTreeThree = styled.img`
+  position: absolute;
+  bottom: 42px;
+  right: 100px;
+  z-index: 2;
+
+  ${media.tablet`
+    right: 36px;
+  `};
+
+  ${media.desktop`
+    right: 160px;
+  `};
 `;
 
 const daysProps = [
@@ -111,6 +162,10 @@ const CalendarContent = ({ days, calendarRoute }) => {
       </Tinsels>
 
       <Snow style={{ backgroundImage: `url(${snow})` }} />
+
+      <ChristmasTreeOne src={christmasTree} alt="" />
+      <ChristmasTreeTwo src={christmasTree} alt="" />
+      <ChristmasTreeThree src={christmasTree} alt="" />
     </>
   );
 };
