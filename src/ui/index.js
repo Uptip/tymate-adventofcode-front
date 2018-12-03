@@ -143,6 +143,19 @@ export const Buttons = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 1rem;
+  margin-left: -8px;
+  flex-wrap: wrap;
+
+  ${props =>
+    props.variant === 'alignedLeft' &&
+    css`
+      justify-content: flex-start;
+      align-items: center;
+    `};
+
+  > * + * {
+    padding-left: 8px;
+  }
 `;
 
 export const Button = ({ isLoading, children, icon, ...props }) => (
@@ -166,9 +179,24 @@ export const Button = ({ isLoading, children, icon, ...props }) => (
 export const Title = styled.h2`
   font-family: 'Abril Fatface', cursive;
   margin-top: 0;
+
+  ${props =>
+    props.size === 'big' &&
+    css`
+      font-size: 2em;
+      letter-spacing: 0.05em;
+    `};
 `;
 
-export const Kicker = styled.p``;
+export const Kicker = styled.p`
+  ${props =>
+    props.size === 'big' &&
+    css`
+      font-weight: 500;
+      font-size: 1.414em;
+      margin-bottom: 1em;
+    `};
+`;
 
 export const Input = styled.input`
   box-shadow: 0 0 0 2px #e9e9e9;

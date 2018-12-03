@@ -21,6 +21,20 @@ import {
 } from 'ui';
 import { MdClose, MdEdit } from 'react-icons/md';
 import Helmet from 'react-helmet';
+import {
+  FacebookShareButton,
+  LinkedinShareButton,
+  TwitterShareButton,
+  EmailShareButton,
+} from 'react-share';
+import Clipboard from 'react-clipboard.js';
+import {
+  IoLogoFacebook,
+  IoMdClipboard,
+  IoLogoLinkedin,
+  IoIosMail,
+  IoLogoTwitter,
+} from 'react-icons/io';
 
 const Content = styled.div`
   padding: 1em;
@@ -90,6 +104,30 @@ const DayNumber = styled.h2`
   right: 0.5rem;
 `;
 
+const ShareButton = styled.button`
+  border: 0;
+  appearance: none;
+  cursor: pointer;
+  font-size: 1.414em;
+  padding: 8px;
+  border-radius: 8px;
+  color: #fff;
+  background-image: ${props => props.theme.primaryGradient};
+  display: flex;
+`;
+
+const ClipboardButton = styled(Clipboard)`
+  border: 0;
+  appearance: none;
+  cursor: pointer;
+  font-size: 1.414em;
+  padding: 8px;
+  border-radius: 8px;
+  color: #fff;
+  background-image: ${props => props.theme.primaryGradient};
+  display: flex;
+`;
+
 const isFilled = ({ contentType, description, image, link }) =>
   Boolean(contentType) ||
   Boolean(description) ||
@@ -106,6 +144,24 @@ const Icon = styled.span`
 const Admin = ({ match }) => {
   const [userToken, setUserToken] = useState(localStorage.getItem('token'));
   const [displayName, setDisplayName] = useState('');
+  const [clipboardCallbackIsVisible, setClipboardCallbackIsVisible] = useState(
+    false,
+  );
+
+  let clipboardCallbackTimeout;
+
+  useEffect(() => {
+    if (!clipboardCallbackIsVisible) {
+      return;
+    }
+
+    clipboardCallbackTimeout = setTimeout(
+      () => setClipboardCallbackIsVisible(false),
+      2000,
+    );
+
+    return () => clearTimeout(clipboardCallbackTimeout);
+  });
 
   useEffect(() => {
     const { token } = match.params;
@@ -185,16 +241,20 @@ const Admin = ({ match }) => {
           );
         }
 
+        const shareURL = `https://christmas.tymate.com/${
+          data.admin.calendar.slug
+        }`;
+
         return (
           <>
             <Helmet>
-              <title>{`Mon calendrier – Calendrier de l’Avent`}</title>
+              <title>{`Votre calendrier – Calendrier de l’Avent`}</title>
             </Helmet>
 
             <Content>
               <div style={{ color: '#fff' }}>
-                <Title>Mon calendrier</Title>
-                <Kicker>
+                <Title size="big">Votre calendrier</Title>
+                <Kicker size="big">
                   Ajoutez un lien, une image ou une vidéo à chaque jour du
                   calendrier ci-dessous. Si vous n’avez rien à ajouter, seul une
                   animation apparaîtra au clic.
@@ -221,12 +281,57 @@ const Admin = ({ match }) => {
               </Days>
 
               {data.admin.calendar.slug && (
-                <Buttons>
+                <Buttons style={{ marginTop: 32 }}>
                   <Button variant="primary" to={`/${data.admin.calendar.slug}`}>
                     Voir votre calendrier
                   </Button>
                 </Buttons>
               )}
+
+              <div style={{ color: '#fff' }}>
+                <Title size="big" style={{ marginTop: 32 }}>
+                  Partager votre calendrier
+                </Title>
+
+                <Buttons variant="alignedLeft">
+                  <FacebookShareButton url={shareURL}>
+                    <ShareButton>
+                      <IoLogoFacebook />
+                    </ShareButton>
+                  </FacebookShareButton>
+                  <LinkedinShareButton url={shareURL}>
+                    <ShareButton>
+                      <IoLogoLinkedin />
+                    </ShareButton>
+                  </LinkedinShareButton>
+                  <TwitterShareButton url={shareURL}>
+                    <ShareButton>
+                      <IoLogoTwitter />
+                    </ShareButton>
+                  </TwitterShareButton>
+                  <EmailShareButton
+                    url={shareURL}
+                    subject="Découvrez mon calendrier de l’avent !"
+                  >
+                    <ShareButton>
+                      <IoIosMail />
+                    </ShareButton>
+                  </EmailShareButton>
+                  <ClipboardButton
+                    style={{ marginLeft: 8 }}
+                    data-clipboard-text={shareURL}
+                    onSuccess={() => setClipboardCallbackIsVisible(true)}
+                  >
+                    <IoMdClipboard />
+                  </ClipboardButton>
+
+                  {clipboardCallbackIsVisible && (
+                    <span style={{ whiteSpace: 'nowrap', marginTop: 16 }}>
+                      Lien copié dans votre presse papier
+                    </span>
+                  )}
+                </Buttons>
+              </div>
             </Content>
 
             <Route
@@ -263,6 +368,7 @@ const Admin = ({ match }) => {
                         onSuccess={refetch}
                       />
                     </Modal>
+
                     <ModalOverlay to="/mon-calendrier" />
                   </>
                 );
